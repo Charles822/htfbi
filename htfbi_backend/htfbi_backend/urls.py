@@ -20,5 +20,12 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('playground/', include('playground.urls'))
+    path('playground/', include('playground.urls')),
+    path('ai_agent/', include('ai_agent.urls')),
+    path('contents/', include('contents.urls')),
+    path('customers/', include('customers.urls')),
+    path('interactions/', include('interactions.urls')),
+    path('lists/', include('lists.urls')),
+    path('notes/', include('notes.urls'))
+
 ] + debug_toolbar_urls()
