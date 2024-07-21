@@ -5,6 +5,8 @@ class Video(models.Model):
     video_id = models.CharField(max_length=50)
     title = models.CharField(max_length=255, blank=True, null=True)
     channel_name = models.CharField(max_length=255)
+    original_language = models.CharField(max_length=50, null=True)
+    duration = models.CharField(max_length=8, null=True)
     published_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
