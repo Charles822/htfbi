@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Video(models.Model):
     youtube_url = models.URLField(max_length=255)
     video_id = models.CharField(max_length=50)
@@ -7,6 +8,7 @@ class Video(models.Model):
     channel_name = models.CharField(max_length=255)
     original_language = models.CharField(max_length=50, null=True)
     duration = models.CharField(max_length=8, null=True)
+    tags = models.JSONField(null=True, blank=True)
     published_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
