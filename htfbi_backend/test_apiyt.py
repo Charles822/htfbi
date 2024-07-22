@@ -2,23 +2,33 @@
 import googleapiclient.discovery
 from decouple import config
 
-def main():
-    # Set up the API key and YouTube API client
-    api_service_name = "youtube"
-    api_version = "v3"
-    api_key = config('YT_API_KEY')
+# def main():
+#     # Set up the API key and YouTube API client
+#     api_service_name = "youtube"
+#     api_version = "v3"
+#     api_key = config('YT_API_KEY')
 
-    youtube = googleapiclient.discovery.build(
-        api_service_name, api_version, developerKey=api_key)
+#     youtube = googleapiclient.discovery.build(
+#         api_service_name, api_version, developerKey=api_key)
 
-    # Replace 'CHANNEL_ID' with the ID of the channel you want to query
-    request = youtube.videos().list(
-        part="snippet,contentDetails",
-        id="1yZegG4yikc"
-    )
-    response = request.execute()
+#     # Replace 'CHANNEL_ID' with the ID of the channel you want to query
+#     request = youtube.videos().list(
+#         part="snippet,contentDetails",
+#         id="1yZegG4yikc"
+#     )
 
-    print(response)
+#     request = youtube.videos.get(f'http://video.google.com/timedtext?lang={"fr"}&v={"1yZegG4yikc"}')
+#     response = request.execute()
 
-if __name__ == "__main__":
-    main()
+#     print(response)
+
+# if __name__ == "__main__":
+#     main()
+
+
+# retrieve transcript
+from youtube_transcript_api import YouTubeTranscriptApi
+
+transcript = YouTubeTranscriptApi.get_transcript("1yZegG4yikc", languages=['fr'])
+
+print(transcript)
