@@ -6,8 +6,9 @@ from django.conf import settings
 from decouple import config
 from rest_framework.viewsets import ModelViewSet
 from .models import Video, Transcript
-from .serializers import VideoSerializer
+from .serializers import VideoSerializer, TranscriptSerializer
 import googleapiclient.discovery
+from youtube_transcript_api import YouTubeTranscriptApi
 import json
 
 youtube_url = 'https://www.youtube.com/watch?v=1yZegG4yikc'
@@ -29,6 +30,14 @@ def fetch_video_info(video_id):
     response = request.execute()
 
     return response
+
+
+def fetch_video_transcript(video_id, original_language):
+
+    transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=[original_language])
+
+    return transcript
+
 
 class VideoViewSet(ModelViewSet):
     queryset = Video.objects.all()
@@ -60,8 +69,6 @@ class VideoViewSet(ModelViewSet):
                 'duration': content_detail['duration'],
                 'tags': video_info.get('tags', []),
                 'original_language': video_info['defaultAudioLanguage']
-
-                
             }
 
             # Serialize the data
@@ -70,3 +77,37 @@ class VideoViewSet(ModelViewSet):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TranscriptViewSet(ModelViewSet):
+    queryset = Transcript.objects.all()
+    serializer_class = TranscriptSerializer
+
+    @action(detail=False, methods=['post'], url_path='add_transcript')
+    def add_transcript(self, request):
+        if request.method == 'POST':
+            content_id = request.data.get('content_id')
+            if not content_id:
+                return Response({"error": "Content ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Fetch video info from YouTube API
+            video_transcript = fetch_video_transcript(content_id, original_language)
+
+            data = {
+                'transcript_text': video_transcript,
+                'video': content_id,
+            }
+
+            # Serialize the data
+            serializer = TranscriptSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+

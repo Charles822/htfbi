@@ -18,7 +18,7 @@ class Video(models.Model):
 
 
 class Transcript(models.Model):
-    transcript_text = models.TextField(null=True, blank=True)
+    transcript_text = models.JSONField(null=True, blank=True)
     video = models.ForeignKey(
         Video, on_delete=models.CASCADE, related_name='transcripts')
     created_at = models.DateTimeField(auto_now_add=True)
