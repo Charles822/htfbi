@@ -5,6 +5,7 @@ from . import views
 
 router = DefaultRouter()
 router.register('videos', views.VideoViewSet)
+router.register('transcripts', views.TranscriptViewSet)
 
 
 urlpatterns = [

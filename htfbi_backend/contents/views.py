@@ -31,10 +31,14 @@ def fetch_video_info(video_id):
 
     return response
 
+# need to handle the logic to fetch the original language
+def fetch_video_transcript(content_id):
 
-def fetch_video_transcript(video_id, original_language):
+    video = Video.objects.filter(id=content_id).get()
+    video_yt_id = video.video_id
+    video_language = video.original_language
 
-    transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=[original_language])
+    transcript = YouTubeTranscriptApi.get_transcript(video_yt_id, languages=[video_language])
 
     return transcript
 
@@ -88,14 +92,22 @@ class TranscriptViewSet(ModelViewSet):
         if request.method == 'POST':
             content_id = request.data.get('content_id')
             if not content_id:
-                return Response({"error": "Content ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "Content_ID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Fetch video info from YouTube API
-            video_transcript = fetch_video_transcript(content_id, original_language)
+            # Check if the video exists
+            try:
+                video = Video.objects.get(id=content_id)
+            except Video.DoesNotExist:
+                return Response({"error": "Video not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            # Fetch transcript
+            video_transcript = fetch_video_transcript(content_id)
+            if video_transcript is None:
+                return Response({"error": "Transcript not found or error fetching transcript"}, status=status.HTTP_404_NOT_FOUND)
 
             data = {
                 'transcript_text': video_transcript,
-                'video': content_id,
+                'video': video.id,
             }
 
             # Serialize the data
