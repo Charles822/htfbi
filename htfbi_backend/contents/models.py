@@ -16,6 +16,9 @@ class Video(models.Model):
     def __str__(self):
         return self.title or self.video_id
 
+    class Meta:
+    	app_label = 'contents'
+
 
 class Transcript(models.Model):
     transcript_text = models.JSONField(null=True, blank=True)
@@ -26,3 +29,6 @@ class Transcript(models.Model):
 
     def __str__(self):
         return f'Transcript for {self.video.title or self.video.video_id}'
+
+    class Meta:
+    	app_label = 'contents'
