@@ -11,8 +11,7 @@ import googleapiclient.discovery
 from youtube_transcript_api import YouTubeTranscriptApi
 import json
 
-youtube_url = 'https://www.youtube.com/watch?v=1yZegG4yikc'
-#video_id = "1yZegG4yikc"
+youtube_url = 'https://www.youtube.com/watch?v=hMvnKX0yeJw'
 
 def fetch_video_info(video_id):
     # Set up the API key and YouTube API client
