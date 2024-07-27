@@ -1,5 +1,17 @@
 from django.db import models
 
+
+class AgentRole(models.Model):
+    description = models.TextField()
+
+    def __str__(self):
+        return f"Agent Role: {self.description[:50]}..."
+    
+    class Meta:
+        app_label = 'ai_agent'
+
+
+
 class Response(models.Model):
     video = models.ForeignKey('contents.Video', on_delete=models.CASCADE)
     transcript = models.ForeignKey('contents.Transcript', on_delete=models.CASCADE)
