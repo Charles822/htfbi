@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Vote(models.Model):
     UPVOTE = 1
@@ -13,6 +14,7 @@ class Vote(models.Model):
 
     note = models.ForeignKey('notes.Note', on_delete=models.CASCADE)
     vote = models.IntegerField(choices=VOTE_CHOICES, default=NEUTRAL)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -22,3 +24,19 @@ class Vote(models.Model):
 
     class Meta:
         app_label = 'interactions'
+        unique_together = ('user', 'note')  # Ensure one vote per user per note
+
+
+class Comment(models.Model):
+    note = models.ForeignKey('notes.Note', on_delete=models.CASCADE)
+    text = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f" Comment {self.id} for Note ID {self.note.id}"
+
+    class Meta:
+        app_label = 'interactions'
+        ordering = ['created_at']
