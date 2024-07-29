@@ -18,7 +18,6 @@ django.setup()
 
 from contents.models import Transcript
 
-
 transcript_data = Transcript.objects.filter(id="3").get()
 transcript = transcript_data.transcript_text
 

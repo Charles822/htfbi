@@ -19,6 +19,7 @@ class AgentRole(models.Model):
 class AgentResponse(models.Model):
     video = models.ForeignKey('contents.Video', on_delete=models.CASCADE)
     transcript = models.ForeignKey('contents.Transcript', on_delete=models.CASCADE)
+    agent_role = models.ForeignKey('AgentRole', on_delete=models.CASCADE)
     agent_response = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     

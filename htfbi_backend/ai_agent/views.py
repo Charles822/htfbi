@@ -37,3 +37,25 @@ class AgentRoleViewSet(ModelViewSet):
 class AgentResponseViewSet(ModelViewSet):
     queryset = AgentResponse.objects.all()
     serializer_class = AgentResponseSerializer
+
+    @action(detail=False, methods=['post'], url_path='add_agent_response')
+    def add_agent_response(self, request):
+        transcript_id = request.data.get('transcript_id')
+        name = agent_info.get('name')
+        description = agent_info.get('description')
+
+        if not name or not description:
+            return Response({"error": "Both 'name' and 'description' are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        data = {
+            'name': name,
+            'description': description,
+        }
+
+
+        # Serialize the data
+        serializer = AgentRoleSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
