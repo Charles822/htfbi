@@ -4,9 +4,8 @@ from django.contrib.auth.models import User
 class Note(models.Model):
     video = models.ForeignKey('contents.Video', on_delete=models.CASCADE)
     response = models.OneToOneField('ai_agent.Response', on_delete=models.CASCADE)
-    note_list = models.OneToOneField('lists.List', on_delete=models.CASCADE,  default=1)
-    content = models.TextField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    note_list = models.ForeignKey('lists.List', on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -14,3 +13,6 @@ class Note(models.Model):
 
     class Meta:
         app_label = 'notes'
+        ordering = ['-created_at']
+        verbose_name = 'Note'
+        verbose_name_plural = 'Notes'
