@@ -6,10 +6,13 @@ class AgentRole(models.Model):
     description = models.TextField()
 
     def __str__(self):
-        return f"Agent Role: {self.description[:50]}..."
+        return f"Agent Role: {self.name or self.description[:50]}..."
     
     class Meta:
         app_label = 'ai_agent'
+        verbose_name = 'Agent Role'
+        verbose_name_plural = 'Agent Roles'
+        ordering = ['name']
 
 
 
@@ -24,3 +27,6 @@ class Response(models.Model):
 
     class Meta:
         app_label = 'ai_agent'
+        verbose_name = 'Response'
+        verbose_name_plural = 'Responses'
+        ordering = ['-created_at']
