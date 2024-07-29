@@ -16,7 +16,7 @@ class AgentRole(models.Model):
 
 
 
-class Response(models.Model):
+class AgentResponse(models.Model):
     video = models.ForeignKey('contents.Video', on_delete=models.CASCADE)
     transcript = models.ForeignKey('contents.Transcript', on_delete=models.CASCADE)
     agent_response = models.TextField()
@@ -27,6 +27,6 @@ class Response(models.Model):
 
     class Meta:
         app_label = 'ai_agent'
-        verbose_name = 'Response'
-        verbose_name_plural = 'Responses'
+        verbose_name = 'AgentResponse'
+        verbose_name_plural = 'AgentResponses'
         ordering = ['-created_at']

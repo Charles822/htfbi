@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class Note(models.Model):
     video = models.ForeignKey('contents.Video', on_delete=models.CASCADE)
-    response = models.OneToOneField('ai_agent.Response', on_delete=models.CASCADE)
+    response = models.OneToOneField('ai_agent.AgentResponse', on_delete=models.CASCADE)
     note_list = models.ForeignKey('lists.List', on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

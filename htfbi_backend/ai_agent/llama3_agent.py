@@ -44,14 +44,12 @@ def transform_into_chunks(transcript):
 
 transcript_chunks = transform_into_chunks(transcript)
 
-# print(result[0])
-# print(len(result))
-
 
 client = Groq(
     api_key=config("GROQ_API_KEY"),
 )
 
+# agent one conduct the business analysis
 def agent_one(chunk):
 
     return client.chat.completions.create(
@@ -73,6 +71,7 @@ def agent_one(chunk):
     stream=False,
 )
 
+# agent two delivers the final response
 def agent_two(agent_one_response):
 
     return client.chat.completions.create(
@@ -95,6 +94,7 @@ def agent_two(agent_one_response):
 )
 
 
+# this is where we use agent 1 to go over the transcript
 def analyse_chunks(transcript_chunks):
     analyzed_chunks = []
     for chunk in transcript_chunks:
@@ -103,6 +103,7 @@ def analyse_chunks(transcript_chunks):
 
 analyzed_chunks = analyse_chunks(transcript_chunks)
 
+# here we combine all chunks into one string for agent 2 to process it
 def combine_analyzed_chunks(analyzed_chunks):
     agent_one_response = ""
     for chunk in analyzed_chunks:
@@ -111,6 +112,7 @@ def combine_analyzed_chunks(analyzed_chunks):
 
 agent_one_response = combine_analyzed_chunks(analyzed_chunks)
 
+# here we use agent 2 to deliver the final response
 agent_two_response = agent_two(agent_one_response).choices[0].message.content
 
 
