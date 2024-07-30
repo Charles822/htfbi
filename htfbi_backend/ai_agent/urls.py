@@ -4,6 +4,7 @@ from . import views
 
 router = DefaultRouter()
 router.register('agents', views.AgentRoleViewSet)
+router.register('agent_responses', views.AgentResponseViewSet)
 
 
 urlpatterns = [

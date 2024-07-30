@@ -6,11 +6,11 @@ class AgentRoleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AgentRole
-        fields = ['id', 'name', 'description']
+        fields = ['id', 'name', 'description', 'created_at']
 
 
 class AgentResponseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AgentResponse
-        fields = ['__all__']
+        fields = ['id', 'video', 'transcript', 'agent_role', 'agent_response', 'created_at']
