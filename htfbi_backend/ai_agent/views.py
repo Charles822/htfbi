@@ -26,7 +26,6 @@ class AgentRoleViewSet(ModelViewSet):
             'description': description,
         }
 
-
         # Serialize the data
         serializer = AgentRoleSerializer(data=data)
         if serializer.is_valid():
@@ -45,8 +44,8 @@ class AgentResponseViewSet(ModelViewSet):
         transcript_id = note_request.get('transcript_id')
         agent_id = note_request.get('agent_id')
 
-        if not transcript_id or agent_id:
-            return Response({"error": "Both 'transcript_id' and 'agent_role' are required"}, status=status.HTTP_400_BAD_REQUEST)
+        if not transcript_id or not agent_id:
+            return Response({"error": "Both 'transcript_id' and 'agent_id' are required"}, status=status.HTTP_400_BAD_REQUEST)
 
         # use get_agent_response from our Llama3 agent file to get the ai response
         video, agent_response = get_agent_response(transcript_id, agent_id)
@@ -58,7 +57,6 @@ class AgentResponseViewSet(ModelViewSet):
             'agent_role': agent_id,
             'agent_response': agent_response,
         }
-
 
         # Serialize the data
         serializer = AgentResponseSerializer(data=data)
