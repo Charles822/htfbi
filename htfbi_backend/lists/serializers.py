@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import List
 from ai_agent.models import AgentRole
+from ai_agent.serializers import AgentRoleSerializer
 
 class ListCreationSerializer(serializers.Serializer):
     name = serializers.CharField(required=True)
@@ -28,6 +29,7 @@ class ListCreationSerializer(serializers.Serializer):
 
 
 class ListSerializer(serializers.ModelSerializer):
+    agent_role = AgentRoleSerializer(read_only=True) # to view the agent when querying a List
 
     class Meta:
         model = List
