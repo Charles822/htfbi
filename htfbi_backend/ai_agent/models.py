@@ -4,6 +4,7 @@ from django.db import models
 class AgentRole(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Agent Role: {self.name or self.description[:50]}..."
