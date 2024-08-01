@@ -2,6 +2,17 @@ from decouple import config
 import googleapiclient.discovery
 from youtube_transcript_api import YouTubeTranscriptApi
 import json
+import sys
+import os
+import django
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(project_root)
+
+# Set up Django environment
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'htfbi_backend.settings')
+django.setup()
+
 from contents.models import Video 
 
 def fetch_video_info(video_id):

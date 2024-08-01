@@ -9,12 +9,12 @@ import django
 
 
 # # Add the project root to sys.path
-# project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-# sys.path.append(project_root)
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(project_root)
 
-# # Set up Django
-# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'htfbi_backend.settings')
-# django.setup()
+# Set up Django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'htfbi_backend.settings')
+django.setup()
 
 from contents.models import Transcript
 from ai_agent.models import AgentRole
