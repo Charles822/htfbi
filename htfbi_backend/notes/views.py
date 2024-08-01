@@ -1,6 +1,22 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from rest_framework import status
+from rest_framework.viewsets import ModelViewSet
+from django.conf import settings
+from .models import Note
+from .serializers import NoteSerializer, NoteCreationSerializer
 
-def index(request):
-    return HttpResponse("Hello, world!")
+class NoteViewSet(ModelViewSet):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
 
+    @action(detail=False, methods=['post'], url_path='add_note')
+    def add_note(self, request):
+        serializer = NoteCreationSerializer(data=request.data.get('note_info', {}))
+        
+        if serializer.is_valid():
+            note_instance = serializer.save()
+            response_serializer = NoteSerializer(note_instance)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

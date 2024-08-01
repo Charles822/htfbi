@@ -1,6 +1,11 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import views
 
+router = DefaultRouter()
+router.register('notes', views.NoteViewSet)
+
+
 urlpatterns = [
-    path('hello/', views.index),  
+    path('', include(router.urls)),  # Include the router URLs
 ]

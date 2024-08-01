@@ -6,7 +6,7 @@ class VideoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Video
-        fields = ['id', 'video_id', 'title', 'channel_name', 'youtube_url', 'duration', 'original_language', 'tags', 'published_at', 'created_at']
+        fields = ['id', 'youtube_video_id', 'title', 'channel_name', 'youtube_url', 'duration', 'original_language', 'tags', 'published_at', 'created_at']
 
 class TranscriptSerializer(serializers.ModelSerializer):
 

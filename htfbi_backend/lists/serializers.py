@@ -3,6 +3,7 @@ from .models import List
 from ai_agent.models import AgentRole
 from ai_agent.serializers import AgentRoleSerializer
 
+
 class ListCreationSerializer(serializers.Serializer):
     name = serializers.CharField(required=True)
     description = serializers.CharField(required=True)
@@ -25,7 +26,6 @@ class ListCreationSerializer(serializers.Serializer):
         )
         
         return list_instance
-
 
 
 class ListSerializer(serializers.ModelSerializer):

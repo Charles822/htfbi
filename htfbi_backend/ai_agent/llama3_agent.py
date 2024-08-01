@@ -23,9 +23,9 @@ from ai_agent.models import AgentRole
 def get_transcript_data(transcript_id):
     transcript_data = Transcript.objects.filter(id=transcript_id).get()
     transcript = transcript_data.transcript_text
-    video = transcript_data.video.id
+    #video = transcript_data.video.id
 
-    return transcript, video 
+    return transcript
 
 def get_agent_role(agent_id):
     agent = AgentRole.objects.filter(id=agent_id).get()
@@ -123,7 +123,7 @@ def combine_analyzed_chunks(analyzed_chunks):
 # Resolution 
 
 def get_agent_response(transcript_id, agent_id):
-    transcript, video = get_transcript_data(transcript_id)
+    transcript = get_transcript_data(transcript_id)
 
     agent_role = get_agent_role(agent_id)
 
@@ -136,7 +136,7 @@ def get_agent_response(transcript_id, agent_id):
     # here we use agent 2 to deliver the final response
     agent_final_response = agent_two(agent_one_response).choices[0].message.content
 
-    return video, agent_final_response
+    return agent_final_response
 
 #video, agent_final_response = get_agent_response(3, 1)
 

@@ -64,7 +64,7 @@ class VideoViewSet(ModelViewSet):
             content_detail = video_data['items'][0]['contentDetails']
 
             data = {
-                'video_id': video_id,
+                'youtube_video_id': video_id,
                 'title': video_info['title'],
                 'channel_name': video_info['channelTitle'],
                 'youtube_url': youtube_url,
