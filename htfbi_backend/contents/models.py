@@ -7,7 +7,7 @@ class Video(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     channel_name = models.CharField(max_length=255)
     original_language = models.CharField(max_length=50, null=True)
-    duration = models.CharField(max_length=8, null=True)
+    duration = models.CharField(max_length=20, null=True)
     tags = models.JSONField(null=True, blank=True)
     published_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)

@@ -2,7 +2,23 @@ from decouple import config
 import googleapiclient.discovery
 from youtube_transcript_api import YouTubeTranscriptApi
 import json
-from contents.models import Video 
+from contents.models import Video
+from urllib.parse import urlparse, parse_qs
+
+def extract_video_id(youtube_url):
+    query = urlparse(youtube_url)
+    if query.hostname == 'youtu.be':
+        return query.path[1:]
+    if query.hostname in ('www.youtube.com', 'youtube.com'):
+        if query.path == '/watch':
+            p = parse_qs(query.query)
+            return p.get('v', [None])[0]
+        if query.path.startswith('/embed/'):
+            return query.path.split('/')[2]
+        if query.path.startswith('/v/'):
+            return query.path.split('/')[2]
+    # fail?
+    return None
 
 def fetch_video_info(video_id):
     # Set up the API key and YouTube API client

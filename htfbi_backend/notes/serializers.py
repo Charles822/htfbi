@@ -4,21 +4,24 @@ from ai_agent.models import AgentResponse, AgentRole
 from contents.models import Video, Transcript
 from lists.models import List
 from django.contrib.auth.models import User
-from contents.youtube_data import fetch_video_info, fetch_video_transcript
+from contents.youtube_data import fetch_video_info, fetch_video_transcript, extract_video_id
 from ai_agent.llama3_agent import get_agent_response
 from contents.serializers import VideoSerializer
 from ai_agent.serializers import AgentResponseSerializer
 
-youtube_url = 'https://www.youtube.com/watch?v=hMvnKX0yeJw'
 
 class NoteCreationSerializer(serializers.Serializer):
-    youtube_video_id = serializers.CharField(required=True)
+    youtube_url = serializers.URLField(required=True)
     note_list = serializers.IntegerField(required=True)
     owner = serializers.IntegerField(required=True)
 
     def create(self, validated_data):
+        # get the youtube video ID
+        youtube_url = validated_data['youtube_url']
+        youtube_video_id = extract_video_id(youtube_url)
+
         # Create the Video instance
-        video_data = fetch_video_info(validated_data['youtube_video_id'])
+        video_data = fetch_video_info(youtube_video_id)
 
         if 'items' not in video_data or not video_data['items']:
             return Response({"error": "Invalid video ID or no data found"}, status=status.HTTP_404_NOT_FOUND)
@@ -28,7 +31,7 @@ class NoteCreationSerializer(serializers.Serializer):
         content_detail = video_data['items'][0]['contentDetails']
 
         video_instance = Video.objects.create(
-            youtube_video_id=validated_data['youtube_video_id'],
+            youtube_video_id=youtube_video_id,
             title=video_info['title'],
             channel_name=video_info['channelTitle'],
             youtube_url=youtube_url,
