@@ -23,7 +23,6 @@ from ai_agent.models import AgentRole
 def get_transcript_data(transcript_id):
     transcript_data = Transcript.objects.filter(id=transcript_id).get()
     transcript = transcript_data.transcript_text
-    #video = transcript_data.video.id
 
     return transcript
 
