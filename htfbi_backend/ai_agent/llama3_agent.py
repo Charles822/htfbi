@@ -1,36 +1,8 @@
-#!/usr/bin/env python3
-import os
-import sys
 import json
 from groq import Groq
 from decouple import config
-from django.conf import settings
-import django
-
-
-# # Add the project root to sys.path
-# project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-# sys.path.append(project_root)
-
-# # Set up Django
-# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'htfbi_backend.settings')
-# django.setup()
-
 from contents.models import Transcript
 from ai_agent.models import AgentRole
-
-
-def get_transcript_data(transcript_id):
-    transcript_data = Transcript.objects.filter(id=transcript_id).get()
-    transcript = transcript_data.transcript_text
-
-    return transcript
-
-def get_agent_role(agent_id):
-    agent = AgentRole.objects.filter(id=agent_id).get()
-    agent_role = agent.description
-
-    return agent_role
 
 
 # Split the transcript into chunks of 1000 tokens
@@ -121,10 +93,7 @@ def combine_analyzed_chunks(analyzed_chunks):
 
 # Resolution 
 
-def get_agent_response(transcript_id, agent_id):
-    transcript = get_transcript_data(transcript_id)
-
-    agent_role = get_agent_role(agent_id)
+def get_agent_response(transcript, agent_role):
 
     transcript_chunks = transform_into_chunks(transcript)
 
@@ -136,10 +105,3 @@ def get_agent_response(transcript_id, agent_id):
     agent_final_response = agent_two(agent_one_response).choices[0].message.content
 
     return agent_final_response
-
-#video, agent_final_response = get_agent_response(3, 1)
-
-# Print the completion returned by the LLM
-# print(agent_final_response)
-# print('---------------------------------')
-# print(video)

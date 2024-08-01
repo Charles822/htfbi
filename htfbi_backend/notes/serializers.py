@@ -67,7 +67,7 @@ class NoteCreationSerializer(serializers.Serializer):
         owner = User.objects.get(id=owner_id)
         
         # generate response with the agent
-        agent_response = get_agent_response(transcript_instance.id, agent_id)
+        agent_response = get_agent_response(transcript_instance.transcript_text, agent_role.description)
 
 
         agent_response_instance = AgentResponse.objects.create(
