@@ -7,8 +7,13 @@ from .models import Note
 from .serializers import NoteSerializer, NoteCreationSerializer
 
 class NoteViewSet(ModelViewSet):
-    queryset = Note.objects.all()
     serializer_class = NoteSerializer
+
+    def get_queryset(self):
+        list_id = self.kwargs.get('list_pk')
+        if list_id is not None:
+            return Note.objects.filter(note_list=list_id)
+        return Note.objects.all()
 
     @action(detail=False, methods=['post'], url_path='add_note')
     def add_note(self, request):

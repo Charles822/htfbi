@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import List
 from ai_agent.models import AgentRole
 from ai_agent.serializers import AgentRoleSerializer
+from django.contrib.auth.models import User
 
 
 class ListCreationSerializer(serializers.Serializer):
@@ -18,11 +19,13 @@ class ListCreationSerializer(serializers.Serializer):
         )
         
         # Create the List instance
+        owner = validated_data['owner']
+        list_owner = User.objects.get(id=owner)
         list_instance = List.objects.create(
             name=validated_data['name'],
             description=validated_data['description'],
             agent_role=agent_role,
-            owner_id=validated_data['owner']  # Assuming owner is a foreign key to a User model
+            owner=list_owner  # Assuming owner is a foreign key to a User model
         )
         
         return list_instance

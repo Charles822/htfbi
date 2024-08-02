@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from django.conf import settings
@@ -10,7 +11,7 @@ class ListViewSet(ModelViewSet):
     queryset = List.objects.all()
     serializer_class = ListSerializer
 
-    @action(detail=False, methods=['post'], url_path='add_list')
+    @action(detail=False, methods=['post'], url_path='add_list', permission_classes=[IsAuthenticated])
     def add_agent(self, request):
         serializer = ListCreationSerializer(data=request.data.get('list_info', {}))
         
