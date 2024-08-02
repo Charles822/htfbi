@@ -1,14 +1,31 @@
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from django.conf import settings
 from .models import Comment, Vote
 from .serializers import CommentSerializer, CommentCreationSerializer, VoteSerializer, VoteCreationSerializer
+from .permissions import IsOwnerOrAdmin
+
+
+def get_permissions_based_on_action(action):
+    # No permission required for retrieving a resource
+    if action == 'retrieve':
+        return [AllowAny]
+    # Allow any authenticated user to create a resource
+    elif action == 'create':
+        return [IsAuthenticated]
+    # For other actions, only allow the owner or an admin
+    else:
+        return [IsOwnerOrAdmin]
+
 
 class CommentViewSet(ModelViewSet):
     serializer_class = CommentSerializer
+
+    def get_permissions(self):
+        return [permission() for permission in get_permissions_based_on_action(self.action)]
 
     def get_queryset(self):
         note_id = self.kwargs.get('note_pk')
@@ -16,10 +33,9 @@ class CommentViewSet(ModelViewSet):
             return Comment.objects.filter(note=note_id)
         return Comment.objects.all()
 
-
     @action(detail=False, methods=['post'], url_path='add_comment')
     def add_comment(self, request, *args, **kwargs):
-        serializer = CommentCreationSerializer(data=request.data.get('list_info', {}))
+        serializer = CommentCreationSerializer(data=request.data.get('comment_info', {}))
         
         if serializer.is_valid():
             comment_instance = serializer.save()
@@ -30,8 +46,13 @@ class CommentViewSet(ModelViewSet):
 
 
 class VoteViewSet(ModelViewSet):
-    queryset = Vote.objects.all()
     serializer_class = VoteSerializer
+
+    def get_queryset(self):
+        note_id = self.kwargs.get('note_pk')
+        if note_id is not None:
+            return Vote.objects.filter(note=note_id)
+        return Vote.objects.all()
 
     @action(detail=False, methods=['post'], url_path='add_vote')
     def add_vote(self, request, *args, **kwargs):
@@ -39,7 +60,7 @@ class VoteViewSet(ModelViewSet):
         
         if serializer.is_valid():
             vote_instance = serializer.save()
-            response_serializer = VoteSerializer(comment_instance)
+            response_serializer = VoteSerializer(vote_instance)
             return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
