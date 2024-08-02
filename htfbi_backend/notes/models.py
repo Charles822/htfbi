@@ -9,7 +9,7 @@ class Note(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Note for Video ID {self.video.video_id}"
+        return f"Note for Video title: {self.video.title}"
 
     class Meta:
         app_label = 'notes'

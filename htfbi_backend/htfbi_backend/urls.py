@@ -20,18 +20,23 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 from rest_framework_nested import routers
 from lists.views import ListViewSet
 from notes.views import NoteViewSet
+from interactions.views import CommentViewSet
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
 
 # Main router for lists
-main_router = routers.DefaultRouter()
-main_router.register('lists', ListViewSet, basename='lists')
+lists_router = routers.DefaultRouter()
+lists_router.register('lists', ListViewSet, basename='lists')
 
 # Nested router for notes
-nested_router = routers.NestedDefaultRouter(main_router, 'lists', lookup='list')
-nested_router.register('notes', NoteViewSet, basename='list-notes')
+notes_router = routers.NestedDefaultRouter(lists_router, 'lists', lookup='list')
+notes_router.register('notes', NoteViewSet, basename='list-notes')
+
+# Nested router for comments under notes
+comments_router = routers.NestedDefaultRouter(notes_router, 'notes', lookup='note')
+comments_router.register('comments', CommentViewSet, basename='note-comments')
 
 
 urlpatterns = [
@@ -44,7 +49,8 @@ urlpatterns = [
     path('customers/', include('customers.urls')),
     path('interactions/', include('interactions.urls')),
     path('lists/', include('lists.urls')),
-    path('lists/', include(nested_router.urls)),
+    path('lists/', include(notes_router.urls)),
+    path('lists/', include(comments_router.urls)),
     path('notes/', include('notes.urls'))
 
 ] + debug_toolbar_urls()
