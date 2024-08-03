@@ -94,7 +94,22 @@ class NoteCreationSerializer(serializers.Serializer):
 class NoteSerializer(serializers.ModelSerializer):
     video = VideoSerializer(read_only=True)
     response = AgentResponseSerializer(read_only=True)
+    comments_count = serializers.SerializerMethodField(
+        method_name='get_comments_count')
+    votes_count = serializers.SerializerMethodField(
+        method_name='get_votes_count')
 
     class Meta:
         model = Note
-        fields = ['id', 'video', 'response', 'note_list', 'owner', 'created_at']
+        fields = ['id', 'video', 'response', 'note_list', 'owner', 'comments_count', 'votes_count', 'created_at']
+
+
+    def get_comments_count(self, note: Note):
+        return note.comments.count()
+
+    def get_votes_count(self, note: Note):
+        return note.votes.count()
+
+
+
+

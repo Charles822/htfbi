@@ -12,7 +12,7 @@ class Vote(models.Model):
         (NEUTRAL, 'Neutral'),
     ]
 
-    note = models.ForeignKey('notes.Note', on_delete=models.CASCADE)
+    note = models.ForeignKey('notes.Note', on_delete=models.CASCADE, related_name='votes')
     vote = models.IntegerField(choices=VOTE_CHOICES, default=NEUTRAL)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -30,7 +30,7 @@ class Vote(models.Model):
 
 
 class Comment(models.Model):
-    note = models.ForeignKey('notes.Note', on_delete=models.CASCADE)
+    note = models.ForeignKey('notes.Note', on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
