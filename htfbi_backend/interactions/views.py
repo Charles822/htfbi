@@ -6,7 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 from django.conf import settings
 from .models import Comment, Vote
 from .serializers import CommentSerializer, CommentCreationSerializer, VoteSerializer, VoteCreationSerializer
-from .permissions import IsOwnerOrAdmin
+from core.permissions import IsOwnerOrAdmin
 
 
 def get_permissions_based_on_action(action):

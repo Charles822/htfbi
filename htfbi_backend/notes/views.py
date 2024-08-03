@@ -5,9 +5,22 @@ from rest_framework.viewsets import ModelViewSet
 from django.conf import settings
 from .models import Note
 from .serializers import NoteSerializer, NoteCreationSerializer
+from core.permissions import AdminOnly
+
+def get_permissions_based_on_action(action):
+    # No permission required for retrieving a resource
+    if action == 'retrieve':
+        return [AllowAny]
+        
+    # For other actions, only allow the owner or an admin
+    else:
+        return [AdminOnly]
 
 class NoteViewSet(ModelViewSet):
     serializer_class = NoteSerializer
+
+    def get_permissions(self):
+        return [permission() for permission in get_permissions_based_on_action(self.action)]
 
     def get_queryset(self):
         list_id = self.kwargs.get('list_pk')
