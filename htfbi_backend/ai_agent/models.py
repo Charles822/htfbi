@@ -4,6 +4,7 @@ from django.db import models
 class AgentRole(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     description = models.TextField()
+    updated_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -21,6 +22,7 @@ class AgentResponse(models.Model):
     transcript = models.ForeignKey('contents.Transcript', on_delete=models.CASCADE)
     agent_role = models.ForeignKey(AgentRole, on_delete=models.CASCADE, related_name='agent_responses')
     agent_response = models.TextField()
+    updated_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

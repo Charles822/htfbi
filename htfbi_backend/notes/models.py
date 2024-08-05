@@ -6,6 +6,7 @@ class Note(models.Model):
     response = models.OneToOneField('ai_agent.AgentResponse', on_delete=models.CASCADE)
     note_list = models.ForeignKey('lists.List', on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    updated_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -7,6 +7,7 @@ class List(models.Model):
     agent_role = models.ForeignKey('ai_agent.AgentRole', on_delete=models.CASCADE)
     is_closed = models.BooleanField(default=False)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    updated_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
