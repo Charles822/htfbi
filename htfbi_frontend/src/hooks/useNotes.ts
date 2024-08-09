@@ -23,12 +23,10 @@ export interface Note {
 	created_at: string;
 }
 
-const useNotes = (listId: number) => {
-	const endpoint = `/lists/lists/${listId}/notes`;
-	return useData<Note[]>(endpoint);
+const useNotes = (listId: number, noteId?: number) => {
+	const endpoint = noteId ? `/lists/lists/${listId}/notes/${noteId}` : `/lists/lists/${listId}/notes`;
+	return useData<Note | Note[]>(endpoint);
 	}
 
 export default useNotes;
-
-
 
