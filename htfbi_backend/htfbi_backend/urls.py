@@ -50,12 +50,12 @@ urlpatterns = [
     path('playground/', include('playground.urls')),
     path('ai_agent/', include('ai_agent.urls')),
     path('contents/', include('contents.urls')),
-    path('customers/', include('customers.urls')),
+    path('users/', include('users.urls')),
     path('interactions/', include('interactions.urls')),
     path('lists/', include('lists.urls')),
     path('lists/', include(notes_router.urls)),
     path('lists/', include(comments_router.urls)),
-        path('lists/', include(votes_router.urls)),
-    path('notes/', include('notes.urls'))
+    path('lists/', include(votes_router.urls)),
+    path('notes/', include('notes.urls')),
 
 ] + debug_toolbar_urls()

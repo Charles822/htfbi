@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'playground',
     'ai_agent',
     'contents',
-    'customers',
+    'users',
     'interactions',
     'lists',
     'notes'
