@@ -20,15 +20,17 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 from rest_framework_nested import routers
 from lists.views import ListViewSet
 from notes.views import NoteViewSet
+from users.views import UserViewSet, MyTokenObtainPairView
 from interactions.views import CommentViewSet, VoteViewSet
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from rest_framework_simplejwt.views import TokenRefreshView
 
 # Main router for lists
 lists_router = routers.DefaultRouter()
 lists_router.register('lists', ListViewSet, basename='lists')
+
+# Main router for Votes
+votes_router = routers.DefaultRouter()
+votes_router.register('votes', VoteViewSet, basename='votes')
 
 # Nested router for notes
 notes_router = routers.NestedDefaultRouter(lists_router, 'lists', lookup='list')
@@ -39,12 +41,16 @@ comments_router = routers.NestedDefaultRouter(notes_router, 'notes', lookup='not
 comments_router.register('comments', CommentViewSet, basename='note-comments')
 
 # Nested router for votes under notes
-votes_router = routers.NestedDefaultRouter(notes_router, 'notes', lookup='note')
-votes_router.register('votes', VoteViewSet, basename='note-votes')
+notes_votes_router = routers.NestedDefaultRouter(notes_router, 'notes', lookup='note')
+notes_votes_router.register('votes', VoteViewSet, basename='note-votes')
+
+# Nested router for users under votes
+users_votes_router = routers.NestedDefaultRouter(votes_router, 'votes', lookup='vote')
+users_votes_router.register('users', UserViewSet, basename='user-votes')
 
 
 urlpatterns = [
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),
     path('playground/', include('playground.urls')),
@@ -55,7 +61,10 @@ urlpatterns = [
     path('lists/', include('lists.urls')),
     path('lists/', include(notes_router.urls)),
     path('lists/', include(comments_router.urls)),
-    path('lists/', include(votes_router.urls)),
+    path('lists/', include(notes_votes_router.urls)),
     path('notes/', include('notes.urls')),
+    path('votes/', include(votes_router.urls)),
+    path('votes/', include(users_votes_router.urls)),
+
 
 ] + debug_toolbar_urls()
