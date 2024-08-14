@@ -15,7 +15,7 @@ def get_permissions_based_on_action(action):
 
     # For other actions, only allow the owner or an admin
     else:
-        return [AdminOnly]
+        return [AllowAny]
 
 
 class ListViewSet(ModelViewSet):
@@ -25,9 +25,10 @@ class ListViewSet(ModelViewSet):
     def get_permissions(self):
         return [permission() for permission in get_permissions_based_on_action(self.action)]
 
-    @action(detail=False, methods=['post'], url_path='add_list', permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=['post'], url_path='add_list')
     def add_agent(self, request):
-        serializer = ListCreationSerializer(data=request.data.get('list_info', {}))
+        print("Incoming request data:", request.data)
+        serializer = ListCreationSerializer(data=request.data)
         
         if serializer.is_valid():
             list_instance = serializer.save()
