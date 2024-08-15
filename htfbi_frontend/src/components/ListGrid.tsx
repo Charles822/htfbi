@@ -7,14 +7,21 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+import { useEffect } from 'react';
 import { Separator } from "@/components/ui/separator";
 import useLists from "../hooks/useLists"; 
+import ListForm from "../Pages/ListForm"
 
 
 const ListGrid = () => {
-  const { data, error, isLoading } = useLists();
+  const { execute, data, error, isLoading } = useLists();
   console.log(data);
 
+  useEffect(() => {
+    execute(); // Trigger fetching lists
+  }, []);
+
+  console.log(isLoading)
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading note: {error.message}</p>;
 
@@ -26,7 +33,7 @@ const ListGrid = () => {
       <h1 className="my-2 px-6 text-2xl font-bold">All Lists</h1>
       <div>
         {data && data.map((list) => 
-          <div key={list.id} className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1 mb-2">
+          <div key={list.id} className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1 mb-1">
             <Card>
               <CardHeader>
                 <CardTitle className="my-2 text-md">{list.name}</CardTitle>
@@ -36,7 +43,7 @@ const ListGrid = () => {
                     <li>Agent Role: {list.agent_role.description}</li>
                   </ul>
                   <ul>
-                    <li>Note created by {list.owner}</li>
+                    <li>List created by {list.owner}</li>
                     <li>On: {list.created_at}</li>
                   </ul>
                 </CardDescription>

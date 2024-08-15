@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import NoteDetailsCard from '../components/NoteDetailsCard';
 import ListDetails from '../components/ListDetails';
 import ListGrid from '../components/ListGrid';
+import ListForm from './ListForm';
 
 function Layout() {
   return (
@@ -13,7 +14,7 @@ function Layout() {
         <Sidenav />
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
           <Header />
-          <ListGrid />
+          <ListForm />
         </div>
       </div>
     </>
