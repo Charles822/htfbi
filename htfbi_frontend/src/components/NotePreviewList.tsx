@@ -7,13 +7,21 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+import { useEffect } from "react"
 import { Separator } from "@/components/ui/separator";
 import useNotes from "../hooks/useNotes"; 
 
+interface Props {
+  listId: number;
+}
 
-const NotePreviewList = () => {
-  const { data, error, isLoading } = useNotes(4);
+const NotePreviewList = ({ listId }: Props) => {
+  const { execute, data, error, isLoading } = useNotes(listId);
   console.log(data);
+
+  useEffect(() => {
+    execute(); // Trigger fetching the list
+  }, []); // need to add depency execute in prod server
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading note: {error.message}</p>;
@@ -25,11 +33,11 @@ const NotePreviewList = () => {
     <>
       <div>
         {data && data.map((note) => 
-          <div key={note.id} className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1">
+          <div key={note.id} className="mb-1">
             <Card>
               <CardHeader>
                 <CardTitle className="my-2 text-md">{note.video.title}</CardTitle>
-                <CardDescription className="grid flex-1 gap-4  lg:grid-cols-2 xl:grid-cols-2 justify-between">
+                <CardDescription className="grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between">
                   <ul>
                     <li>Channel: {note.video.channel_name}</li>
                     <li>{note.video.youtube_url}</li>

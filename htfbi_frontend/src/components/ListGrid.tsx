@@ -19,7 +19,7 @@ const ListGrid = () => {
 
   useEffect(() => {
     execute(); // Trigger fetching lists
-  }, []);
+  }, []); // need to add depency execute in prod server
 
   console.log(isLoading)
   if (isLoading) return <p>Loading...</p>;
