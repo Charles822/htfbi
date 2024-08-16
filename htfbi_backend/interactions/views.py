@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from django.conf import settings
 from .models import Comment, Vote
-from .serializers import CommentSerializer, CommentCreationSerializer, VoteSerializer, VoteCreationSerializer, GetVoteSerializer
+from .serializers import CommentSerializer, CommentCreationSerializer, VoteSerializer, VoteCreationSerializer, GetVoteSerializer, PatchVoteSerializer
 from core.permissions import IsOwnerOrAdmin
 
 
@@ -75,7 +75,19 @@ class VoteViewSet(ModelViewSet):
         if vote:
             return Response({'has_voted': True, 'vote': VoteSerializer(vote).data}, status=status.HTTP_200_OK)
         else:
-            return Response({'has_voted': False}, status=status.HTTP_200_OK)
+            return Response({'has_voted': False}, status=status.HTTP_400_BAD_REQUEST)
 
+
+    @action(detail=False, methods=['patch'], url_path='patch_vote')
+    def patch_vote(self, request, *args, **kwargs):
+        serializer = PatchVoteSerializer(data=request.data)
+
+        if serializer.is_valid():
+            new_vote = serializer.patch_vote(serializer.validated_data)
+
+        if new_vote:
+            return Response({'has_updated_vote': True, 'vote': VoteSerializer(new_vote).data}, status=status.HTTP_200_OK)
+        else:
+            return Response({'has_updated_voted': False}, status=status.HTTP_400_BAD_REQUEST)
 
 

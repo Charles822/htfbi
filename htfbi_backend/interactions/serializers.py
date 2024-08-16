@@ -65,6 +65,24 @@ class GetVoteSerializer(serializers.Serializer):
         return vote
 
 
+class PatchVoteSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    vote = serializers.IntegerField(required=True)
+
+    def patch_vote(self, validated_data):
+        vote_id = validated_data['id']
+        new_vote_value = validated_data['vote']
+
+        vote = Vote.objects.filter(id=vote_id).first()
+
+        if vote:
+            vote.vote = new_vote_value
+            vote.save()
+            return vote
+        
+        return None
+
+
 class VoteSerializer(serializers.ModelSerializer):
 
     class Meta:
