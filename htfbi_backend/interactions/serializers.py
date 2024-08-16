@@ -44,13 +44,25 @@ class VoteCreationSerializer(serializers.Serializer):
         note = Note.objects.get(id=note_id)
         user = User.objects.get(id=user_id)
         
-        comment_instance = Comment.objects.create(
+        vote_instance = Votes.objects.create(
             note=note,
             vote=vote,
             user=user
         )
         
-        return comment_instance
+        return vote_instance
+
+class GetVoteSerializer(serializers.Serializer):
+    note = serializers.IntegerField(required=True)
+    user = serializers.IntegerField(required=True)
+
+    def get_vote(self, validated_data):
+        note_id = validated_data['note']
+        user_id = validated_data['user']
+
+        vote = Vote.objects.filter(note=note_id, user=user_id).first()
+        
+        return vote
 
 
 class VoteSerializer(serializers.ModelSerializer):

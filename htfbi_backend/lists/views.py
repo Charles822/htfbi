@@ -27,7 +27,6 @@ class ListViewSet(ModelViewSet):
 
     @action(detail=False, methods=['post'], url_path='add_list')
     def add_agent(self, request):
-        print("Incoming request data:", request.data)
         serializer = ListCreationSerializer(data=request.data)
         
         if serializer.is_valid():

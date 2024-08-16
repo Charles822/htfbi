@@ -31,7 +31,7 @@ class NoteViewSet(ModelViewSet):
 
     @action(detail=False, methods=['post'], url_path='add_note')
     def add_note(self, request, *args, **kwargs):
-        serializer = NoteCreationSerializer(data=request.data.get('note_info', {}))
+        serializer = NoteCreationSerializer(data=request.data)
         
         if serializer.is_valid():
             note_instance = serializer.save()

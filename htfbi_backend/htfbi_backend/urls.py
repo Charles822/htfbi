@@ -28,10 +28,6 @@ from rest_framework_simplejwt.views import TokenRefreshView
 lists_router = routers.DefaultRouter()
 lists_router.register('lists', ListViewSet, basename='lists')
 
-# Main router for Votes
-votes_router = routers.DefaultRouter()
-votes_router.register('votes', VoteViewSet, basename='votes')
-
 # Nested router for notes
 notes_router = routers.NestedDefaultRouter(lists_router, 'lists', lookup='list')
 notes_router.register('notes', NoteViewSet, basename='list-notes')
@@ -41,12 +37,9 @@ comments_router = routers.NestedDefaultRouter(notes_router, 'notes', lookup='not
 comments_router.register('comments', CommentViewSet, basename='note-comments')
 
 # Nested router for votes under notes
-notes_votes_router = routers.NestedDefaultRouter(notes_router, 'notes', lookup='note')
-notes_votes_router.register('votes', VoteViewSet, basename='note-votes')
+votes_router = routers.NestedDefaultRouter(notes_router, 'notes', lookup='note')
+votes_router.register('votes', VoteViewSet, basename='note-votes')
 
-# Nested router for users under votes
-users_votes_router = routers.NestedDefaultRouter(votes_router, 'votes', lookup='vote')
-users_votes_router.register('users', UserViewSet, basename='user-votes')
 
 
 urlpatterns = [
@@ -59,12 +52,11 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('interactions/', include('interactions.urls')),
     path('lists/', include('lists.urls')),
+    path('notes/', include('notes.urls')),
+    # Nested URLs
     path('lists/', include(notes_router.urls)),
     path('lists/', include(comments_router.urls)),
-    path('lists/', include(notes_votes_router.urls)),
-    path('notes/', include('notes.urls')),
-    path('votes/', include(votes_router.urls)),
-    path('votes/', include(users_votes_router.urls)),
-
+    path('lists/', include(votes_router.urls)),
+    
 
 ] + debug_toolbar_urls()

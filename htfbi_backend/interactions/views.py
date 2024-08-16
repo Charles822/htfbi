@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from django.conf import settings
 from .models import Comment, Vote
-from .serializers import CommentSerializer, CommentCreationSerializer, VoteSerializer, VoteCreationSerializer
+from .serializers import CommentSerializer, CommentCreationSerializer, VoteSerializer, VoteCreationSerializer, GetVoteSerializer
 from core.permissions import IsOwnerOrAdmin
 
 
@@ -56,7 +56,7 @@ class VoteViewSet(ModelViewSet):
 
     @action(detail=False, methods=['post'], url_path='add_vote')
     def add_vote(self, request, *args, **kwargs):
-        serializer = VoteCreationSerializer(data=request.data.get('vote_info', {}))
+        serializer = VoteCreationSerializer(data=request.data)
         
         if serializer.is_valid():
             vote_instance = serializer.save()
@@ -64,6 +64,18 @@ class VoteViewSet(ModelViewSet):
             return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'], url_path='user_vote')
+    def user_vote(self, request, *args, **kwargs):
+        serializer = GetVoteSerializer(data=request.query_params)
+
+        if serializer.is_valid():
+            vote = serializer.get_vote(serializer.validated_data)
+
+        if vote:
+            return Response({'has_voted': True, 'vote': VoteSerializer(vote).data}, status=status.HTTP_200_OK)
+        else:
+            return Response({'has_voted': False}, status=status.HTTP_200_OK)
 
 
 
