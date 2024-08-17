@@ -7,6 +7,7 @@ import ListDetails from '../components/ListDetails';
 import ListGrid from '../components/ListGrid';
 import ListForm from './ListForm';
 import NoteForm from '../components/NoteForm';
+import Vote from '../components/Vote';
 
 function Layout() {
   return (
@@ -15,7 +16,7 @@ function Layout() {
         <Sidenav />
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
           <Header />
-          <ListDetails />
+          <Vote />
         </div>
       </div>
     </>

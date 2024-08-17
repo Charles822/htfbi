@@ -9,8 +9,13 @@ export interface Vote {
 	user: number;
 }
 
-const useVotes = (listId: number, noteId: number, voteID: number, userID: number,  method: 'get' | 'post' | 'patch' = 'get', requestData?: any) => {
-	const endpoint = `/lists/lists/${listId}/notes/${noteId}/votes/${voteId}/users/${userId}/add_vote`;
+const useVotes = (listId?: number, noteId?: number, voteId?: number, userId?: number,  method: 'get' | 'post' | 'patch' = 'get', requestData?: any) => {
+	const endpoint = method === 'post'
+	? `/interactions/votes/add_vote/`
+	: method === 'patch'
+		? `/interactions/votes/${voteId}/patch_vote/`
+		: `/interactions/votes/user_vote/?note=${noteId}&user=${userId}`;
+
 	return useData<Vote>(endpoint);
 	}
 

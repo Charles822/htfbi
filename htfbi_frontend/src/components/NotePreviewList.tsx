@@ -31,7 +31,8 @@ const NotePreviewList = ({ listId }: Props) => {
   
   return (
     <>
-      <div>
+      <div className="col-span-3">
+        <h3 className="text-lg font-bold mb-6">Notes in this List</h3>
         {data && data.map((note) => 
           <div key={note.id} className="mb-1">
             <Card>

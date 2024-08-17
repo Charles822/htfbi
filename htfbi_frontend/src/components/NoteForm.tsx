@@ -29,10 +29,11 @@ type FormData = z.infer<typeof formSchema>;
 
 interface Props {
 	listId: number;
+	isSubmitted: (status: boolean) => void;
 }
 
 
-function NoteForm({ listId }: Props) {
+function NoteForm({ listId, isSubmitted }: Props) {
   // 1. Define your form.
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -70,14 +71,13 @@ function NoteForm({ listId }: Props) {
       console.log('Note created successfully:', data);
       toast({variant: "success", description: "Your note has been created successfully!"});
       reset();
+      isSubmitted(true);
     }
   };
 
-  // className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3
-
   return (
   	<>
-	  	<div className="">
+	  	<div>
 	  		<h3 className="text-lg font-bold">Create a new Note in this List</h3>
 		    <Form {...form} >
 		      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
