@@ -9,7 +9,9 @@ import {
 
 import { useEffect } from "react"
 import { Separator } from "@/components/ui/separator";
+import Vote from './Vote';
 import useNotes from "../hooks/useNotes"; 
+import  { jwtDecode } from 'jwt-decode';
 
 interface Props {
   listId: number;
@@ -17,6 +19,7 @@ interface Props {
 
 const NotePreviewList = ({ listId }: Props) => {
   const { execute, data, error, isLoading } = useNotes(listId);
+  const userId = jwtDecode(localStorage.getItem('authTokens')).user_id;
   console.log(data);
 
   useEffect(() => {
@@ -51,8 +54,8 @@ const NotePreviewList = ({ listId }: Props) => {
                   </ul>
                 </CardDescription>
               </CardHeader>
+              <span className="text-sm justify-between text-stone-600"><Vote noteId={note.id} userId={userId} >{note.votes_count}</Vote></span>
               <CardFooter className="grid flex-1 gap-4 p-4 sm:px-6 sm:py-0 md:gap-5 lg:grid-cols-5 xl:grid-cols-5">
-                <span className="text-sm text-stone-600">{note.votes_count} Upvotes</span>
                 <span className="text-sm text-stone-600">{note.comments_count} Comments</span>
               </CardFooter>
             </Card>
