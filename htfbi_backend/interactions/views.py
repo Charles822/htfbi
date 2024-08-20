@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from django.conf import settings
 from .models import Comment, Vote
-from .serializers import CommentSerializer, CommentCreationSerializer, VoteSerializer, VoteCreationSerializer, GetVoteSerializer, PatchVoteSerializer
+from .serializers import CommentSerializer, CommentCreationSerializer, VoteSerializer, VoteCreationSerializer, GetVoteSerializer, PatchVoteSerializer, GetVoteSumSerializer
 from core.permissions import IsOwnerOrAdmin
 
 
@@ -75,6 +75,17 @@ class VoteViewSet(ModelViewSet):
                 return Response({'has_voted': True, 'vote': VoteSerializer(vote).data}, status=status.HTTP_200_OK)
         
         return Response({'has_voted': False}, status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, methods=['get'], url_path='votes_sum')
+    def votes_sum(self, request, *args, **kwargs):
+        serializer = GetVoteSumSerializer(data=request.query_params)
+
+        if serializer.is_valid():
+            votes_sum = serializer.get_votes_sum(serializer.validated_data)
+            if votes_sum:
+                return Response({'votes_sum': votes_sum}, status=status.HTTP_200_OK)
+        
+        return Response({'message': 'No votes yet'}, status=status.HTTP_204_NO_CONTENT)
 
 
     @action(detail=False, methods=['patch'], url_path='patch_vote')

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Comment, Vote
 from notes.models import Note
 from django.contrib.auth.models import User
+from django.db.models import Sum
 
 
 class CommentCreationSerializer(serializers.Serializer):
@@ -64,6 +65,16 @@ class GetVoteSerializer(serializers.Serializer):
         
         return vote
 
+class GetVoteSumSerializer(serializers.Serializer):
+    note = serializers.IntegerField(required=True)
+
+    def get_votes_sum(self, validated_data):
+        note_id = validated_data['note']
+
+        total_sum = Vote.objects.filter(note=note_id).aggregate(total=Sum('vote'))['total'] or 0
+        
+        return max(total_sum, 0)
+        
 
 class PatchVoteSerializer(serializers.Serializer):
     id = serializers.IntegerField(required=True)
