@@ -1,10 +1,10 @@
-import axios, { CanceledError, AxiosRequestConfig } from "axios";
+import axios, { CanceledError, AxiosRequestConfig, AxiosError } from "axios";
 import { useState, useEffect } from "react";
 import apiClient from '../services/api-client';
 
 const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch', requestData?: any, requestConfig?: AxiosRequestConfig, deps?: any[]) => {
   const [data, setData] = useState<T[]>([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setLoading] = useState(false);
 
   const execute = async (requestData) => {
@@ -20,10 +20,15 @@ const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch', requestD
       setData(response.data);
     } 
     catch (err) {
-      setError(err.message);
-    } 
-    finally {
-      setLoading(false);
+    if (axios.isAxiosError(err)) {
+      const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
+      setError(errorMessage); 
+    } else {
+      setError('An unexpected error occurred');
+    }
+    console.error('Error fetching data:', err);
+  } finally {
+    setLoading(false);
     }
   };
 
@@ -31,32 +36,3 @@ const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch', requestD
 };
 
 export default useData;
-
-
-
-
-//   useEffect(() => {
-//     const controller = new AbortController();
-
-//     setLoading(true);
-//     apiClient({
-//       url: endpoint,
-//       method,
-//       data: requestData,
-//       signal: controller.signal,
-//       ...requestConfig
-//     })
-//       .then((res) => {
-//         setData(res.data);
-//         setLoading(false);
-//       })
-//       .catch((err) => {
-//         if (err instanceof CanceledError) return;
-//         setError(err.message);
-//         setLoading(false);
-//       });
-//     return () => controller.abort();
-//   }, deps ? [...deps] : []);
-
-//   return { data, error, isLoading };
-// }
