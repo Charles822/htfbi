@@ -4,6 +4,7 @@ from ai_agent.models import AgentResponse, AgentRole
 from contents.models import Video, Transcript
 from lists.models import List
 from django.contrib.auth.models import User
+from django.db.models import Sum
 from contents.youtube_data import fetch_video_info, fetch_video_transcript, extract_video_id
 from ai_agent.llama3_agent import get_agent_response
 from contents.serializers import VideoSerializer
@@ -97,7 +98,7 @@ class NoteSerializer(serializers.ModelSerializer):
     comments_count = serializers.SerializerMethodField(
         method_name='get_comments_count')
     votes_count = serializers.SerializerMethodField(
-        method_name='get_votes_count')
+        method_name='get_votes_sum')
 
     class Meta:
         model = Note
@@ -107,8 +108,9 @@ class NoteSerializer(serializers.ModelSerializer):
     def get_comments_count(self, note: Note):
         return note.comments.count()
 
-    def get_votes_count(self, note: Note):
-        return note.votes.count()
+    def get_votes_sum(self, note: Note):
+        total_sum = note.votes.aggregate(total=Sum('vote'))['total'] or 0
+        return max(total_sum, 0)
 
 
 

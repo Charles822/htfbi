@@ -44,7 +44,7 @@ class VoteCreationSerializer(serializers.Serializer):
         note = Note.objects.get(id=note_id)
         user = User.objects.get(id=user_id)
         
-        vote_instance = Votes.objects.create(
+        vote_instance = Vote.objects.create(
             note=note,
             vote=vote,
             user=user

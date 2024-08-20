@@ -71,11 +71,10 @@ class VoteViewSet(ModelViewSet):
 
         if serializer.is_valid():
             vote = serializer.get_vote(serializer.validated_data)
-
-        if vote:
-            return Response({'has_voted': True, 'vote': VoteSerializer(vote).data}, status=status.HTTP_200_OK)
-        else:
-            return Response({'has_voted': False}, status=status.HTTP_400_BAD_REQUEST)
+            if vote:
+                return Response({'has_voted': True, 'vote': VoteSerializer(vote).data}, status=status.HTTP_200_OK)
+        
+        return Response({'has_voted': False}, status=status.HTTP_204_NO_CONTENT)
 
 
     @action(detail=False, methods=['patch'], url_path='patch_vote')
@@ -84,10 +83,9 @@ class VoteViewSet(ModelViewSet):
 
         if serializer.is_valid():
             new_vote = serializer.patch_vote(serializer.validated_data)
-
-        if new_vote:
-            return Response({'has_updated_vote': True, 'vote': VoteSerializer(new_vote).data}, status=status.HTTP_200_OK)
-        else:
-            return Response({'has_updated_voted': False}, status=status.HTTP_400_BAD_REQUEST)
+            if new_vote:
+                return Response({'has_updated_vote': True, 'vote': VoteSerializer(new_vote).data}, status=status.HTTP_200_OK)
+            
+        return Response({'has_updated_voted': False}, status=status.HTTP_400_BAD_REQUEST)
 
 
