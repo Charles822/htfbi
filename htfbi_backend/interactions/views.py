@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from django.conf import settings
 from .models import Comment, Vote
-from .serializers import CommentSerializer, CommentCreationSerializer, VoteSerializer, VoteCreationSerializer, GetVoteSerializer, PatchVoteSerializer, GetVoteSumSerializer
+from .serializers import CommentSerializer, CommentCreationSerializer, VoteSerializer, VoteCreationSerializer, GetVoteSerializer, PatchVoteSerializer, GetVoteSumSerializer, GetCommentsCountSerializer
 from core.permissions import IsOwnerOrAdmin
 
 
@@ -41,6 +41,16 @@ class CommentViewSet(ModelViewSet):
             comment_instance = serializer.save()
             response_serializer = CommentSerializer(comment_instance)
             return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'], url_path='comments_count')
+    def comments_count(self, request, *args, **kwargs):
+        serializer = GetCommentsCountSerializer(data=request.query_params)
+
+        if serializer.is_valid():
+            comments_count = serializer.get_comments_count(serializer.validated_data)
+            return Response({'comments_count': comments_count}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

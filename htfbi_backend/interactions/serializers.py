@@ -25,6 +25,16 @@ class CommentCreationSerializer(serializers.Serializer):
         
         return comment_instance
 
+class GetCommentsCountSerializer(serializers.Serializer):
+    note = serializers.IntegerField(required=True)
+
+    def get_comments_count(self, validated_data):
+        note_id = validated_data['note']
+
+        total_count = Comment.objects.filter(note=note_id).count()
+                
+        return total_count or 0
+
 
 class CommentSerializer(serializers.ModelSerializer):
 
