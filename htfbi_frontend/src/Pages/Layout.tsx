@@ -8,6 +8,7 @@ import ListGrid from '../components/ListGrid';
 import ListForm from './ListForm';
 import NoteForm from '../components/NoteForm';
 import Vote from '../components/Vote';
+import CommentsPreview from '../components/CommentsPreview';
 
 function Layout() {
   return (

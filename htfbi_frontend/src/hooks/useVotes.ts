@@ -5,7 +5,6 @@ export interface Vote {
 	id: number;
 	note: number;
 	vote: Response;
-	owner: number;
 	user: number;
 }
 
