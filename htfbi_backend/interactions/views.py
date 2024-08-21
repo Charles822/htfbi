@@ -82,10 +82,9 @@ class VoteViewSet(ModelViewSet):
 
         if serializer.is_valid():
             votes_sum = serializer.get_votes_sum(serializer.validated_data)
-            if votes_sum:
-                return Response({'votes_sum': votes_sum}, status=status.HTTP_200_OK)
+            return Response({'votes_sum': votes_sum}, status=status.HTTP_200_OK)
         
-        return Response({'message': 'No votes yet'}, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
     @action(detail=False, methods=['patch'], url_path='patch_vote')

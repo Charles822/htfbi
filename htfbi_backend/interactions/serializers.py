@@ -71,9 +71,9 @@ class GetVoteSumSerializer(serializers.Serializer):
     def get_votes_sum(self, validated_data):
         note_id = validated_data['note']
 
-        total_sum = Vote.objects.filter(note=note_id).aggregate(total=Sum('vote'))['total'] or 0
-        
-        return max(total_sum, 0)
+        total_sum = Vote.objects.filter(note=note_id).aggregate(total=Sum('vote'))['total']
+                
+        return max(total_sum or 0, 0)
         
 
 class PatchVoteSerializer(serializers.Serializer):
