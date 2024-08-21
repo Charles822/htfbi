@@ -14,7 +14,9 @@ const useVotes = (noteId?: number, userId?: number,  method: 'get' | 'post' | 'p
 	? `/interactions/votes/add_vote/`
 	: method === 'patch'
 		? `/interactions/votes/patch_vote/`
-		: `/interactions/votes/user_vote/?note=${noteId}&user=${userId}`;
+		: userId
+			? `/interactions/votes/user_vote/?note=${noteId}&user=${userId}`
+			: `/interactions/votes/votes_sum/?note=${noteId}`;
 
 	return useData<Vote>(endpoint, method, requestData);
 	}

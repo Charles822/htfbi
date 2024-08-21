@@ -54,8 +54,9 @@ const NotePreviewList = ({ listId }: Props) => {
                   </ul>
                 </CardDescription>
               </CardHeader>
-              <span className="text-sm justify-between text-stone-600"><Vote noteId={note.id} userId={userId} >{note.votes_count}</Vote></span>
+              
               <CardFooter className="grid flex-1 gap-4 p-4 sm:px-6 sm:py-0 md:gap-5 lg:grid-cols-5 xl:grid-cols-5">
+                <Vote noteId={note.id} userId={userId} ></Vote>
                 <span className="text-sm text-stone-600">{note.comments_count} Comments</span>
               </CardFooter>
             </Card>
