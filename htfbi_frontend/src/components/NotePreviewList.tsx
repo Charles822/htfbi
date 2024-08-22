@@ -55,7 +55,6 @@ const NotePreviewList = ({ listId }: Props) => {
                   </ul>
                 </CardDescription>
               </CardHeader>
-              
               <CardFooter className="grid flex-1 gap-0 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-6 xl:grid-cols-6 mb-1">
                 <Vote noteId={note.id} userId={userId} ></Vote>
                 <CommentsPreview noteId={note.id}></CommentsPreview>

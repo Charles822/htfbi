@@ -7,48 +7,65 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+import { useEffect } from "react"
 import { Separator } from "@/components/ui/separator"
-import useNotes from "../hooks/useNotes"; 
+import  { jwtDecode } from 'jwt-decode';
+import useNotes from "../hooks/useNotes";
+import Vote from './Vote';
+import CommentsPreview from './CommentsPreview';
+import CommentsList from './CommentsList';
+import CommentForm from './CommentForm';
 
+interface Props {
+  noteId: number;
+  listId: number;
+}
 
-const NoteDetailsCard = () => {
-  const { data, error, isLoading } = useNotes(4, 10);
-  console.log(data);
+const NoteDetailsCard = ({ noteId, listId }: Props) => {
+  const { execute, data: note, error, isLoading } = useNotes(4, 10);
+  const userId = jwtDecode(localStorage.getItem('authTokens')).user_id;
+  console.log(note);
+
+  useEffect(() => {
+    execute(); // Trigger fetching the note
+  }, []); // need to add depency execute in prod server
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading note: {error.message}</p>;
 
   // Check if data is defined and not an array
-  if (!data || Array.isArray(data)) return <p>No note available.</p>;
+  if (!note || Array.isArray(note)) return <p>No note available.</p>;
   
   return (
-    <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1">
-      <Card className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1">
+    <div className="grid flex-1 items-start justify-between gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1">
+      <Card >
         <CardHeader>
-          <CardTitle className="my-2">{data.video.title}</CardTitle>
+          <CardTitle className="my-2">{note.video.title}</CardTitle>
           <CardDescription className="grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between">
             <ul>
-              <li>Channel: {data.video.channel_name}</li>
-              <li>{data.video.youtube_url}</li>
-              <li>Original language: {data.video.original_language}</li>
-              <li>Published date: {data.video.published_at}</li>
+              <li>Channel: {note.video.channel_name}</li>
+              <li>{note.video.youtube_url}</li>
+              <li>Original language: {note.video.original_language}</li>
+              <li>Published date: {note.video.published_at}</li>
             </ul>
             <ul>
-              <li>Note created by {data.owner}</li>
-              <li>On: {data.created_at}</li>
+              <li>Note created by {note.owner}</li>
+              <li>On: {note.created_at}</li>
             </ul>
           </CardDescription>
         </CardHeader>
         <Separator className="my-2"/>
         <CardContent>
           <h3 className="my-2">Agent Response</h3>
-          <p className="text-sm text-stone-600">{data.response.agent_response}</p>
+          <p className="text-sm text-stone-600">{note.response.agent_response}</p>
         </CardContent>
-        <CardFooter className="grid flex-1 gap-4 p-4 sm:px-6 sm:py-0 md:gap-5 lg:grid-cols-5 xl:grid-cols-5">
-          <span>{data.votes_count} Upvotes</span>
-          <span>{data.comments_count} Comments</span>
+        <CardFooter className="grid flex-1 gap-0 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-6 xl:grid-cols-6 mb-1">
+          <Vote noteId={note.id} userId={userId} ></Vote>
+          <CommentsPreview noteId={note.id}></CommentsPreview>
         </CardFooter>
       </Card>
+      <CommentForm noteId={note.id} />
+      <CommentsList noteId={note.id} />
     </div>
   )
 }

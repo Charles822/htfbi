@@ -9,7 +9,7 @@ interface Props {
 
 const CommentsPreview = ({ noteId }: Props) => {
 	const [commentCount, setCommentCount] = useState<number>(0);
-	const { execute, data, error } = useComments(10); // Fetch votes data
+	const { execute, data, error } = useComments(noteId, undefined, 'get', 'count'); // Fetch votes data
 
 	
 	// Fetch initial vote datas 
