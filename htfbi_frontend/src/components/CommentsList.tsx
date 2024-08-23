@@ -7,16 +7,17 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Separator } from "@/components/ui/separator";
 import useComments from "../hooks/useComments"; 
 import  { jwtDecode } from 'jwt-decode';
 
 interface Props {
   noteId: number;
+  refreshList: boolean;
 }
 
-const CommentsList = ({ noteId }: Props) => {
+const CommentsList = ({ noteId, refreshList }: Props) => {
   const { execute, data, error, isLoading } = useComments(10, undefined, 'get', 'list');
   const userId = jwtDecode(localStorage.getItem('authTokens')).user_id;
   console.log(data);
@@ -39,12 +40,12 @@ const CommentsList = ({ noteId }: Props) => {
           <div key={comment.id} className="mb-1">
             <Card>
               <CardHeader>
-                <div className="grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between">
+                <div className="grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between text-sm">
                   <span>From: @{comment.user}</span>
                   <span>At: {comment.created_at}</span>
                 </div>
               </CardHeader>
-                <CardContent className="grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between">
+                <CardContent className="grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between text-sm">
                   <p>{comment.text}</p>
                 </CardContent>
               <CardFooter className="grid flex-1 gap-0 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-6 xl:grid-cols-6 mb-1">

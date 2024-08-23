@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Separator } from "@/components/ui/separator"
 import  { jwtDecode } from 'jwt-decode';
 import useNotes from "../hooks/useNotes";
@@ -23,12 +23,14 @@ interface Props {
 
 const NoteDetailsCard = ({ noteId, listId }: Props) => {
   const { execute, data: note, error, isLoading } = useNotes(4, 10);
+  const [isSubmitted, setStatus] = useState(false);
   const userId = jwtDecode(localStorage.getItem('authTokens')).user_id;
   console.log(note);
 
   useEffect(() => {
     execute(); // Trigger fetching the note
-  }, []); // need to add depency execute in prod server
+    setStatus(false);
+  }, [isSubmitted]); // need to add depency execute in prod server
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading note: {error.message}</p>;
@@ -64,8 +66,14 @@ const NoteDetailsCard = ({ noteId, listId }: Props) => {
           <CommentsPreview noteId={note.id}></CommentsPreview>
         </CardFooter>
       </Card>
-      <CommentForm noteId={note.id} />
-      <CommentsList noteId={note.id} />
+      <div className="grid flex-1 items-start justify-between gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-2 xl:grid-cols-2" >
+        <CommentForm isSubmitted={status => setStatus(status)} noteId={note.id} />
+      </div>
+      <div className="grid flex-1 gap-4 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-3 xl:grid-cols-3" >
+        <div className="grid flex-1 col-span-2" >
+        <CommentsList noteId={note.id} />
+      </div>
+      </div>
     </div>
   )
 }

@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import  { jwtDecode } from 'jwt-decode'
 import useComments from '../hooks/useComments'
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -21,7 +22,9 @@ import { Toaster } from "@/components/ui/toaster"
  
 
 const formSchema = z.object({
-  text: z.string(),
+  text: z.string().min(2, {
+    message: "Name must be at least 5 characters.",
+  }),
 })
 
 
@@ -50,16 +53,16 @@ function CommentForm({ noteId, isSubmitted }: Props) {
 
 
   // Call useLists at the top level
-  const { execute, data, error, isLoading } = useComments(undefined, undefined, 'post');
+  const { execute, data, error, isLoading } = useComments(undefined, undefined, 'post', undefined);
 
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {
     const user = jwtDecode(localStorage.getItem('authTokens')).user_id;
     const comment_data = {
-      note: values.youtube_url, 
-      text: listId, 
-      user
+      note: noteId, 
+      text: values.text, 
+      user: user,
     };
 
     // Call the API request here
@@ -78,23 +81,21 @@ function CommentForm({ noteId, isSubmitted }: Props) {
   return (
   	<>
 	  	<div>
-	  		<h3 className="text-lg font-bold">Post a new comment</h3>
 		    <Form {...form} >
-		      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+		      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 		        <FormField
 		          control={form.control}
 		          name="text"
 		          render={({ field }) => (
 		            <FormItem>
-		              <FormLabel>New comment</FormLabel>
 		              <FormControl>
-		                <Input placeholder="Write your comment here..." {...field} />
+		                <Textarea placeholder="Write your comment here..." {...field} />
 		              </FormControl>
 		              <FormMessage />
 		            </FormItem>
 		          )}
 		        />
-		        <Button type="submit" disabled={isSubmitting || !isDirty || !isValid}>Submit</Button>
+		        <Button type="submit" disabled={isSubmitting || !isDirty || !isValid}>Post</Button>
 		        <Toaster />
 		      </form>
 		    </Form>

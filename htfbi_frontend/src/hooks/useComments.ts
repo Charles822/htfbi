@@ -22,10 +22,11 @@ const useComments = (
 		? `/interactions/comments/patch_comment/`
 		: endpointType === 'count'
 			? `/interactions/comments/comments_count/?note=${noteId}`
-			: `/interactions/comments/?note=${noteId}`;
+			: endpointType === 'owner'
+				? `/interactions/votes/user_vote/?note=${noteId}&user=${userId}`
+				: `/interactions/comments/?note=${noteId}`;
 
 	return useData<Comment>(endpoint, method, requestData);
 	}
 
 export default useComments;
-
