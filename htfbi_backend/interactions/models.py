@@ -14,7 +14,7 @@ class Vote(models.Model):
 
     note = models.ForeignKey('notes.Note', on_delete=models.CASCADE, related_name='votes')
     vote = models.IntegerField(choices=VOTE_CHOICES, default=NEUTRAL)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -24,7 +24,7 @@ class Vote(models.Model):
 
     class Meta:
         app_label = 'interactions'
-        unique_together = ('user', 'note')  # Ensure one vote per user per note
+        unique_together = ('owner', 'note')  # Ensure one vote per user per note
         verbose_name = 'Vote'
         verbose_name_plural = 'Votes'
 
@@ -32,7 +32,7 @@ class Vote(models.Model):
 class Comment(models.Model):
     note = models.ForeignKey('notes.Note', on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

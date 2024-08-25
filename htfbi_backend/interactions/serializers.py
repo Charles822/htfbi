@@ -8,22 +8,34 @@ from django.db.models import Sum
 class CommentCreationSerializer(serializers.Serializer):
     note = serializers.IntegerField(required=True)
     text = serializers.CharField(required=True)
-    user = serializers.IntegerField(required=True)
+    owner = serializers.IntegerField(required=True)
 
     def create(self, validated_data):
         text = validated_data['text']
         note_id = validated_data['note']
-        user_id = validated_data['user']
+        owner_id = validated_data['owner']
         note = Note.objects.get(id=note_id)
-        user = User.objects.get(id=user_id)
+        owner = owner.objects.get(id=owner_id)
         
         comment_instance = Comment.objects.create(
             note=note,
             text=text,
-            user=user
+            owner=owner
         )
         
         return comment_instance
+
+class GetCommentsSerializer(serializers.Serializer):
+    note = serializers.IntegerField(required=True)
+    owner = serializers.IntegerField(required=True)
+
+    def get_comments(self, validated_data):
+        note_id = validated_data['note']
+        owner_id = validated_data['owner']
+
+        comments = Comment.objects.filter(note=note_id, owner=owner_id)
+        
+        return comments
 
 class GetCommentsCountSerializer(serializers.Serializer):
     note = serializers.IntegerField(required=True)
@@ -40,25 +52,25 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'note', 'text', 'user', 'created_at', 'updated_at']
+        fields = ['id', 'note', 'text', 'owner', 'created_at', 'updated_at']
 
 
 class VoteCreationSerializer(serializers.Serializer):
     note = serializers.IntegerField(required=True)
     vote = serializers.IntegerField(required=True)
-    user = serializers.IntegerField(required=True)
+    owner = serializers.IntegerField(required=True)
 
     def create(self, validated_data):
         vote = validated_data['vote']
         note_id = validated_data['note']
-        user_id = validated_data['user']
+        owner_id = validated_data['owner']
         note = Note.objects.get(id=note_id)
-        user = User.objects.get(id=user_id)
+        owner = owner.objects.get(id=owner_id)
         
         vote_instance = Vote.objects.create(
             note=note,
             vote=vote,
-            user=user
+            owner=owner
         )
         
         return vote_instance
@@ -108,4 +120,4 @@ class VoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vote
-        fields = ['id', 'note', 'vote', 'user', 'created_at', 'updated_at']
+        fields = ['id', 'note', 'vote', 'owner', 'created_at', 'updated_at']

@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from django.conf import settings
 from .models import Comment, Vote
-from .serializers import CommentSerializer, CommentCreationSerializer, VoteSerializer, VoteCreationSerializer, GetVoteSerializer, PatchVoteSerializer, GetVoteSumSerializer, GetCommentsCountSerializer
+from .serializers import CommentSerializer, CommentCreationSerializer, VoteSerializer, VoteCreationSerializer, GetVoteSerializer, PatchVoteSerializer, GetVoteSumSerializer, GetCommentsCountSerializer, GetCommentsSerializer
 from core.permissions import IsOwnerOrAdmin
 
 
@@ -35,7 +35,7 @@ class CommentViewSet(ModelViewSet):
 
     @action(detail=False, methods=['post'], url_path='add_comment')
     def add_comment(self, request, *args, **kwargs):
-        serializer = CommentCreationSerializer(data=request.data.get('comment_info', {}))
+        serializer = CommentCreationSerializer(data=request.data)
         
         if serializer.is_valid():
             comment_instance = serializer.save()
@@ -43,6 +43,19 @@ class CommentViewSet(ModelViewSet):
             return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'], url_path='user_comments')
+    def user_comments(self, request, *args, **kwargs):
+        serializer = GetCommentsSerializer(data=request.query_params)
+
+        if serializer.is_valid():
+            comments = serializer.get_comments(serializer.validated_data)
+            
+            if comments.exists():
+                comments_data = CommentSerializer(comments, many=True).data
+                return Response({'has_commented': True, 'comments': comments_data}, status=status.HTTP_200_OK)
+        
+        return Response({'has_commented': False}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'], url_path='comments_count')
     def comments_count(self, request, *args, **kwargs):
@@ -53,6 +66,14 @@ class CommentViewSet(ModelViewSet):
             return Response({'comments_count': comments_count}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None):
+        try:
+            comment = Comment.objects.get(pk=pk)
+            comment.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Comment.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class VoteViewSet(ModelViewSet):
