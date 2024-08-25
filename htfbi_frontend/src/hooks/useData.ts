@@ -2,7 +2,7 @@ import axios, { CanceledError, AxiosRequestConfig, AxiosError } from "axios";
 import { useState, useEffect } from "react";
 import apiClient from '../services/api-client';
 
-const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch', requestData?: any, requestConfig?: AxiosRequestConfig, deps?: any[]) => {
+const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch' | 'delete', requestData?: any, requestConfig?: AxiosRequestConfig, deps?: any[]) => {
   const [data, setData] = useState<T[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setLoading] = useState(false);

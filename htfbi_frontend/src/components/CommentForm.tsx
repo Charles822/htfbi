@@ -62,7 +62,7 @@ function CommentForm({ noteId, isSubmitted }: Props) {
     const comment_data = {
       note: noteId, 
       text: values.text, 
-      user: user,
+      owner: user,
     };
 
     // Call the API request here

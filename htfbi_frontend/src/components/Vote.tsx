@@ -102,7 +102,7 @@ const Vote = ({ noteId, userId, voteId }: Props) => {
 	    const vote_data = {
 	      note: noteId,
 	      vote: vote_value,
-	      user: userId,
+	      owner: userId,
 	    };
 
 	    try {

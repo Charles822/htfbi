@@ -5,7 +5,7 @@ export interface Vote {
 	id: number;
 	note: number;
 	vote: Response;
-	user: number;
+	owner: number;
 }
 
 const useVotes = (noteId?: number, userId?: number,  method: 'get' | 'post' | 'patch' = 'get', requestData?: any) => {
@@ -14,7 +14,7 @@ const useVotes = (noteId?: number, userId?: number,  method: 'get' | 'post' | 'p
 	: method === 'patch'
 		? `/interactions/votes/patch_vote/`
 		: userId
-			? `/interactions/votes/user_vote/?note=${noteId}&user=${userId}`
+			? `/interactions/votes/user_vote/?note=${noteId}&owner=${userId}`
 			: `/interactions/votes/votes_sum/?note=${noteId}`;
 
 	return useData<Vote>(endpoint, method, requestData);
