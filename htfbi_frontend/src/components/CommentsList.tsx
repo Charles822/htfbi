@@ -12,7 +12,7 @@ import {
 import { useState, useCallback, useEffect } from "react"
 import { Separator } from "@/components/ui/separator";
 import useComments from "../hooks/useComments"; 
-import { baseURL } from "../services/api-client"
+import { baseURL } from "../services/api-client";
 import  { jwtDecode } from 'jwt-decode';
 
 interface Props {

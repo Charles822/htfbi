@@ -17,6 +17,7 @@ export interface Note {
 	id: number;
 	video: Video;
 	response: Response;
+	note_list: number;
 	owner: number;
 	comments_count: number;
 	votes_count: number;
@@ -27,7 +28,7 @@ const useNotes = (listId?: number, noteId?: number, method: 'get' | 'post' | 'pa
 	const endpoint = method === 'post'
 	? `/notes/notes/add_note/`
 	: noteId 
-		? `/lists/lists/${listId}/notes/${noteId}/` 
+		? `/notes/notes/${noteId}/` 
 		: `/lists/lists/${listId}/notes/`;
 	
 	return useData<Note | Note[]>(endpoint, method, requestData);

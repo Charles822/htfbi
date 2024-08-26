@@ -1,3 +1,5 @@
+import { useParams } from 'react-router-dom';
+
 import {
   Card,
   CardContent,
@@ -16,13 +18,10 @@ import CommentsPreview from './CommentsPreview';
 import CommentsList from './CommentsList';
 import CommentForm from './CommentForm';
 
-interface Props {
-  noteId: number;
-  listId: number;
-}
 
-const NoteDetailsCard = ({ noteId, listId }: Props) => {
-  const { execute, data: note, error, isLoading } = useNotes(4, 10);
+const NoteDetailsCard = () => {
+  const params = useParams<{noteId: number}>();
+  const { execute, data: note, error, isLoading } = useNotes(undefined, params.noteId);
   const [isSubmitted, setStatus] = useState(false);
   const userId = jwtDecode(localStorage.getItem('authTokens')).user_id;
   console.log(note);

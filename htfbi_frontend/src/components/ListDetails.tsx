@@ -1,3 +1,5 @@
+import { useParams } from 'react-router-dom'
+
 import {
   Card,
   CardContent,
@@ -15,7 +17,8 @@ import NoteForm from './NoteForm'
 
 
 const ListDetails = () => {
-  const [listId, setListId] = useState(4);
+  const params = useParams<{listId: number}>();
+  const [listId, setListId] = useState(params.listId);
   const [isSubmitted, setStatus] = useState(false);
   const { execute, data, error, isLoading } = useLists(listId);
   console.log(data);

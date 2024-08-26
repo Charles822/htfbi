@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import {
   Card,
   CardContent,
@@ -34,23 +36,25 @@ const ListGrid = () => {
       <div>
         {data && data.map((list) => 
           <div key={list.id} className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1 mb-1">
-            <Card>
-              <CardHeader>
-                <CardTitle className="my-2 text-md">{list.name}</CardTitle>
-                <CardDescription className="grid flex-1 gap-4  lg:grid-cols-2 xl:grid-cols-2 justify-between">
-                  <ul>
-                    <li>Purpose: {list.description}</li>
-                    <li>Agent Role: {list.agent_role.description}</li>
-                  </ul>
-                  <ul>
-                    <li>List created by {list.owner}</li>
-                    <li>On: {list.created_at}</li>
-                  </ul>
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-              </CardFooter>
-            </Card>
+            <Link to={`/list/${list.id}`}>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="my-2 text-md">{list.name}</CardTitle>
+                  <CardDescription className="grid flex-1 gap-4  lg:grid-cols-2 xl:grid-cols-2 justify-between">
+                    <ul>
+                      <li>Purpose: {list.description}</li>
+                      <li>Agent Role: {list.agent_role.description}</li>
+                    </ul>
+                    <ul>
+                      <li>List created by {list.owner}</li>
+                      <li>On: {list.created_at}</li>
+                    </ul>
+                  </CardDescription>
+                </CardHeader>
+                <CardFooter>
+                </CardFooter>
+              </Card>
+            </Link>
           </div>
         )}
       </div>
