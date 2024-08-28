@@ -1,3 +1,6 @@
+import { useContext } from "react";
+import AuthContext from "../context/AuthContext";
+import { User }from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,7 +14,9 @@ import { Button } from "@/components/ui/button"
 
 
 const ProfileButton = () => {
-	return (
+  const { logoutUser } = useContext(AuthContext);
+	
+  return (
 		<DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -19,13 +24,7 @@ const ProfileButton = () => {
               size="icon"
               className="overflow-hidden rounded-full"
             >
-              <img
-                src="/placeholder-user.jpg"
-                width={36}
-                height={36}
-                alt="Avatar"
-                className="overflow-hidden rounded-full"
-              />
+              <User />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -34,7 +33,7 @@ const ProfileButton = () => {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => logoutUser()}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 	)

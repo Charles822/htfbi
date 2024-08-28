@@ -1,19 +1,29 @@
-import React, {useContext} from 'react'
+import React, {useContext, useState} from 'react'
+import { Navigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext'
 
-const LoginPage = () => {
+function LoginPage() {
+  const { loginUser, user } = useContext(AuthContext);
+  const [redirect, setRedirect] = useState(false);
 
-    let {loginUser} = useContext(AuthContext)
+  const handleSubmit = async (e) => {
+    await loginUser(e);
+    if (user) {
+      setRedirect(true);
+    }
+  };
 
-    return (
-        <div>
-            <form onSubmit={loginUser}>
-                <input type="text" name="username" placeholder="Enter username"/>
-                <input type="password" name="password" placeholder="enter password"/>
-                <input type="submit"/>
-            </form>
-        </div>
-    )
+  if (redirect) {
+    return <Navigate to="/" replace />;
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="username" type="text" required />
+      <input name="password" type="password" required />
+      <button type="submit">Login</button>
+    </form>
+  );
 }
 
-export default LoginPage
+export default LoginPage;

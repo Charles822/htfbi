@@ -1,5 +1,6 @@
-// import { BrowserRouter as Router, Route, Routes } from 'react-router-dom' used for the login set up
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
 
 import HomePage from './Pages/HomePage'
 import LoginPage from './Pages/LoginPage'
@@ -21,6 +22,7 @@ import CommentsPreview from './components/CommentsPreview';
 import CommentsList from './components/CommentsList';
 import NotFoundPage from './Pages/NotFoundPage';
 import MainLayout from './Pages/MainLayout';
+import { LoginForm } from './Pages/NewLoginPage';
 
 
 const router = createBrowserRouter([
@@ -37,18 +39,21 @@ const router = createBrowserRouter([
         ],
     },
     { path: 'login', element: <LoginPage />, },
+    { path: 'login/new', element: <LoginForm />, },
 ]);
 
 
 function App() {
   return (
-    <RouterProvider router={router}>
-        <MainLayout />
-    </RouterProvider>
+    <AuthProvider> 
+        <RouterProvider router={router} />
+    </AuthProvider>
   );
 }
 
 export default App;
+
+
 
 // function App() {
 //   return (

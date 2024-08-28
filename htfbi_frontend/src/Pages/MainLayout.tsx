@@ -6,10 +6,16 @@ function MainLayout() {
   return (
     <>
       <div className="flex min-h-screen w-full flex-col bg-muted/40">
-        <Sidenav />
-        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+        <div className="fixed sticky top-0 z-10 border-r bg-white">
           <Header />
-          <Outlet />
+        </div>
+        <div className="flex flex-1">
+          <div className="flex-shrink-0">
+            <Sidenav />
+          </div>
+          <div className="flex flex-col flex-grow sm:gap-4 sm:py-4 sm:pl-14 overflow-y-auto">
+            <Outlet />
+          </div>
         </div>
       </div>
     </>

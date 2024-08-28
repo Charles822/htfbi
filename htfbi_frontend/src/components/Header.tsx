@@ -1,16 +1,24 @@
-import React from 'react'
-import BreadCrumbHeader from './BreadCrumbHeader';
-import SearchHeader from './SearchHeader';
-import ProfileButton from './ProfileButton';
+import React, { useContext } from "react";
+import BreadCrumbHeader from "./BreadCrumbHeader";
+import { Button } from "@/components/ui/button";
+import SearchHeader from "./SearchHeader";
+import ProfileButton from "./ProfileButton";
+import AuthContext from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 const Header = () => {
-	return (
-		<header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-			<BreadCrumbHeader />
-			<SearchHeader />
-			<ProfileButton />
-		</header>
-	)
-}
+	const { user } = useContext(AuthContext);
 
-export default Header
+	return (
+		<header className="flex h-14 items-center gap-4 border-b bg-background px-4">
+			<SearchHeader />
+			{user ? (
+				<ProfileButton />
+			) : (
+				<Button>{<Link to="/login/new">Login</Link>}</Button>
+			)}
+		</header>
+	);
+};
+
+export default Header;
