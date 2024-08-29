@@ -23,7 +23,8 @@ const NoteDetailsCard = () => {
   const params = useParams<{noteId: number}>();
   const { execute, data: note, error, isLoading } = useNotes(undefined, params.noteId);
   const [isSubmitted, setStatus] = useState(false);
-  const userId = jwtDecode(localStorage.getItem('authTokens')).user_id;
+  const token = localStorage.getItem('authTokens');
+  const userId = token ? jwtDecode(token).user_id : null;
   console.log(note);
 
   useEffect(() => {

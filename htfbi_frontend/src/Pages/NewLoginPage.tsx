@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Header from '../components/Header'
-import logo from '../assets/noteless-logo.png';
+import Logo from '../components/Logo';
 
 export function LoginForm() {
   
@@ -36,20 +36,7 @@ export function LoginForm() {
 
   return (
     <>
-      <Button
-      size="icon"
-      className="overflow-hidden rounded-full mx-4 my-4"
-      >
-        <Link to="/">
-          <img
-            src={logo}
-            width={24}
-            height={24}
-            alt="Noteless Logo"
-            className="overflow-hidden rounded-full"
-          />
-        </Link>
-      </Button>
+      <Logo />
       <Card className="mx-auto my-10 max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
@@ -86,7 +73,7 @@ export function LoginForm() {
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <Link href="#" className="underline">
+              <Link to="/signup" className="underline">
                 Sign up
               </Link>
             </div>

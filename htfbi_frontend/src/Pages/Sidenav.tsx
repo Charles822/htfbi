@@ -20,6 +20,8 @@ import {
   Users2,
   List,
   ListPlus,
+  CirclePlus,
+  GalleryVerticalEnd
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -95,7 +97,7 @@ function Sidenav() {
                   return isActive ? 'bg-accent text-accent-foreground' : 'text-muted-foreground';
                 }}
               >
-                <List className="h-5 w-5" />
+                <GalleryVerticalEnd className="h-5 w-5" />
                 <span className="sr-only">All Lists</span>
               </NavLink>
             </TooltipTrigger>
@@ -113,7 +115,7 @@ function Sidenav() {
                   return isActive ? 'bg-accent text-accent-foreground' : 'text-muted-foreground';
                 }}
               >
-                <ListPlus className="h-5 w-5" />
+                <CirclePlus className="h-5 w-5" />
                 <span className="sr-only">Create List</span>
               </NavLink>
             </TooltipTrigger>

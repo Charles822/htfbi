@@ -23,6 +23,7 @@ import CommentsList from './components/CommentsList';
 import NotFoundPage from './Pages/NotFoundPage';
 import MainLayout from './Pages/MainLayout';
 import { LoginForm } from './Pages/NewLoginPage';
+import SignUpForm from './Pages/SignUpForm';
 
 
 const router = createBrowserRouter([
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
     },
     { path: 'login', element: <LoginPage />, },
     { path: 'login/new', element: <LoginForm />, },
+    { path: 'signup', element: <SignUpForm />, },
 ]);
 
 
@@ -52,39 +54,3 @@ function App() {
 }
 
 export default App;
-
-
-
-// function App() {
-//   return (
-//     <>
-//       <div className="flex min-h-screen w-full flex-col bg-muted/40">
-//         <Sidenav />
-//         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-//           <Header />
-//           <RouterProvider router={router}/> 
-//         </div>
-//       </div>
-//     </>
-//   )
-// };
-
-// export default App
-
-
-
-
-
-// login 
-
-        // <div className="App">
-        //     <Router>
-        //       <AuthProvider>
-        //         <HeaderTest/>
-        //         <Routes>
-        //             <Route path="/" element={<PrivateRoute><HomePage/></PrivateRoute>} />
-        //             <Route path="/login" element={<LoginPage/>}/>
-        //         </Routes>
-        //       </AuthProvider>
-        //     </Router>
-        // </div>

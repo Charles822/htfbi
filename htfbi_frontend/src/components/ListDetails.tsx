@@ -29,10 +29,10 @@ const ListDetails = () => {
   }, [isSubmitted]); // need to add depency execute in prod server
 
   if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading note: {error.message}</p>;
+  if (error) return <p>Error loading lists: {error.message}</p>;
 
   // Check if data is defined and not an array
-  if (!data || Array.isArray(data)) return <p>No note available.</p>;
+  if (!data || Array.isArray(data)) return <p>No list available.</p>;
 
   return (
     <>

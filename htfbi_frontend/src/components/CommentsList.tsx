@@ -21,7 +21,8 @@ interface Props {
 
 const CommentsList = ({ noteId }: Props) => { 
   const { execute, data, error, isLoading } = useComments(noteId, undefined, undefined, 'get', 'list');
-  const userId = jwtDecode(localStorage.getItem('authTokens')).user_id;
+  const token = localStorage.getItem('authTokens');
+  const userId = token ? jwtDecode(token).user_id : null;
   console.log(data);
 
   const deleteComment = useCallback(async (commentId: number) => {
