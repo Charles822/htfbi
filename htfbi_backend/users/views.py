@@ -7,8 +7,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.models import User
 from django.conf import settings
 from .models import Customer, Profile
-from .serializers import UserSerializer, ProfileSerializer, CustomerSerializer, MyTokenObtainPairSerializer
-from core.permissions import AdminOnly
+from .serializers import UserSerializer, ProfileSerializer, CustomerSerializer, MyTokenObtainPairSerializer, UserCreationSerializer
+from core.permissions import AdminOnly, IsOwnerOrAdmin
 
 
 def get_permissions_based_on_action(action):

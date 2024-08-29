@@ -6,16 +6,16 @@ from rest_framework.viewsets import ModelViewSet
 from django.conf import settings
 from .models import List
 from .serializers import ListSerializer, ListCreationSerializer
-from core.permissions import AdminOnly
+from core.permissions import AdminOnly, IsOwnerOrAdmin
 
 def get_permissions_based_on_action(action):
     # No permission required for retrieving a resource
-    if action == 'retrieve':
+    if action in ['retrieve', 'post']:
         return [AllowAny]
 
     # For other actions, only allow the owner or an admin
     else:
-        return [AllowAny]
+        return [IsOwnerOrAdmin]
 
 
 class ListViewSet(ModelViewSet):
