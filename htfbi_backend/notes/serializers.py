@@ -24,6 +24,7 @@ class NoteCreationSerializer(serializers.Serializer):
 
         # Create the Video instance
         video_data = fetch_video_info(youtube_video_id)
+        print(video_data)
 
         if 'items' not in video_data or not video_data['items']:
             return Response({"error": "Invalid video ID or no data found"}, status=status.HTTP_404_NOT_FOUND)
@@ -31,6 +32,14 @@ class NoteCreationSerializer(serializers.Serializer):
         # Extract the relevant data
         video_info = video_data['items'][0]['snippet']
         content_detail = video_data['items'][0]['contentDetails']
+
+        #Verify that default language is provided
+        def is_original_language_provided(): 
+            if 'defaultAudioLanguage' in video_info:
+                return video_info['defaultAudioLanguage']
+            return 'na'
+
+        original_language = is_original_language_provided()
 
         video_instance = Video.objects.create(
             youtube_video_id=youtube_video_id,
@@ -40,7 +49,7 @@ class NoteCreationSerializer(serializers.Serializer):
             published_at=video_info['publishedAt'],
             duration=content_detail['duration'],
             tags=video_info.get('tags', []),
-            original_language=video_info['defaultAudioLanguage']
+            original_language=original_language
         )
         
         # Create the Transcript instance

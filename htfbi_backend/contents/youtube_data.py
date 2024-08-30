@@ -40,19 +40,22 @@ def fetch_video_info(video_id):
 # need to handle the logic to fetch the original language
 
 def validate_transcript_language(transcript_list, video_language):
-	for transcript in transcript_list:
-		if not transcript.is_generated:
-			return video_language
-		return transcript.language_code
+    for transcript in transcript_list:
+        if not transcript.is_generated:
+            return video_language
+        print(transcript.language_code)
+        return transcript.language_code
 
 def fetch_video_transcript(content_id):
 
     video = Video.objects.filter(id=content_id).get()
     video_yt_id = video.youtube_video_id
     video_language = video.original_language
+    print(video_language)
 
     # validate available transcript language
     transcript_list = YouTubeTranscriptApi.list_transcripts(video_yt_id)
+    print(transcript_list)
     validated_language = validate_transcript_language(transcript_list, video_language)
 
     # get transcript with validated language
