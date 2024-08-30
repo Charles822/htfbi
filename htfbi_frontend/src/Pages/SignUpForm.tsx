@@ -167,77 +167,80 @@ export default function SignUpForm() {
   return (
     <>
       <Logo />
-      <Card className="mx-auto my-10 max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Create a new account</CardTitle>
-          <CardDescription>
-            Create a new account to start creating your own lists and notes! 
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form} >
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is the name that will appear in your comments, lists and notes.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password confirmation</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />  
-            <Button type="Create Account" disabled={isSubmitting || !isDirty || !isValid}>Submit</Button>
-            <Toaster />
-          </form>
-        </Form>
-        </CardContent>
-      </Card>
+      <div className="grid flex-1 gap-4 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-2 xl:grid-cols-2" >
+        <h1 className="text-4xl font-semibold my-40">Extract and share key ideas from <a className="underline decoration-rose-700">2h+ long </a>Youtube podcasts in 1min.</h1>
+        <Card className="mx-auto my-10 max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-2xl">Create a new account</CardTitle>
+            <CardDescription>
+              Create a new account to start creating your own lists and notes! 
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form} >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This is the name that will appear in your comments, lists and notes.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password confirmation</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />  
+              <Button type="Create Account" disabled={isSubmitting || !isDirty || !isValid}>Submit</Button>
+              <Toaster />
+            </form>
+          </Form>
+          </CardContent>
+        </Card>
+      </div>
     </>
   )
 }

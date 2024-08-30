@@ -41,14 +41,14 @@ const ListDetails = () => {
         <div className="grid flex-1 col-span-3" >
           <h1 className="my-2 mb-10 text-2xl font-bold">{data.name}</h1>
           <h3 className="text-lg font-bold">About this List</h3>
-          <div className="my-2 grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between text-sm text-stone-600">
+          <div className=" grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between text-sm text-stone-600">
             <ul>
-              <li>Purpose: {data.description}</li>
-              <li>Agent Role: {data.agent_role.description}</li>
+              <li className='mb-2'><a className='font-medium text-black'>Purpose:</a> {data.description}</li>
+              <li><a className='font-medium text-black'>Agent Role:</a> {data.agent_role.description}</li>
             </ul>
-            <ul>
-              <li>List created by {data.owner}</li>
-              <li>On: {data.created_at}</li>
+            <ul className="lg:mx-auto">
+              <li><a className='font-medium text-black'>List created by</a><a className='text-rose-700'> @{data.owner.username}</a></li>
+              <li><a className='font-medium text-black'>On:</a> {data.updated_at}</li>
             </ul>
           </div>
         </div>

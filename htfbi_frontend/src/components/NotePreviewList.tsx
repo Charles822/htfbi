@@ -61,7 +61,7 @@ const NotePreviewList = ({ listId }: Props) => {
                       <li>Published date: {note.video.published_at}</li>
                     </ul>
                     <ul>
-                      <li>Note created by {note.owner}</li>
+                      <li>Note created by {note.owner.username}</li>
                       <li>On: {note.created_at}</li>
                     </ul>
                   </CardDescription>
