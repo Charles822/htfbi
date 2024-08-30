@@ -3,6 +3,7 @@ from .models import Comment, Vote
 from notes.models import Note
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from users.serializers import UserSerializer
 
 
 class CommentCreationSerializer(serializers.Serializer):
@@ -49,10 +50,17 @@ class GetCommentsCountSerializer(serializers.Serializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    owner = UserSerializer(read_only=True)
+    updated_at = serializers.SerializerMethodField(
+        method_name='get_formatted_date')
 
     class Meta:
         model = Comment
         fields = ['id', 'note', 'text', 'owner', 'created_at', 'updated_at']
+
+    # Provide a more simple date information for the front end
+    def get_formatted_date(self, comment: Comment):
+        return comment.updated_at.strftime('%Y-%m-%d')
 
 
 class VoteCreationSerializer(serializers.Serializer):

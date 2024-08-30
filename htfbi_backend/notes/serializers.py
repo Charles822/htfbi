@@ -9,6 +9,7 @@ from contents.youtube_data import fetch_video_info, fetch_video_transcript, extr
 from ai_agent.llama3_agent import get_agent_response
 from contents.serializers import VideoSerializer
 from ai_agent.serializers import AgentResponseSerializer
+from users.serializers import UserSerializer
 
 
 class NoteCreationSerializer(serializers.Serializer):
@@ -94,11 +95,14 @@ class NoteCreationSerializer(serializers.Serializer):
 
 class NoteSerializer(serializers.ModelSerializer):
     video = VideoSerializer(read_only=True)
+    owner = UserSerializer(read_only=True)
     response = AgentResponseSerializer(read_only=True)
     comments_count = serializers.SerializerMethodField(
         method_name='get_comments_count')
     votes_count = serializers.SerializerMethodField(
         method_name='get_votes_sum')
+    created_at = serializers.SerializerMethodField(
+        method_name='get_formatted_date')
 
     class Meta:
         model = Note
@@ -111,6 +115,10 @@ class NoteSerializer(serializers.ModelSerializer):
     def get_votes_sum(self, note: Note):
         total_sum = note.votes.aggregate(total=Sum('vote'))['total'] or 0
         return max(total_sum, 0)
+
+    # Provide a more simple date information for the front end
+    def get_formatted_date(self, note: Note):
+        return note.created_at.strftime('%Y-%m-%d')
 
 
 

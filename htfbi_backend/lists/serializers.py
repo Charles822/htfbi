@@ -3,6 +3,7 @@ from .models import List
 from ai_agent.models import AgentRole
 from ai_agent.serializers import AgentRoleSerializer
 from django.contrib.auth.models import User
+from users.serializers import UserSerializer
 
 
 class ListCreationSerializer(serializers.Serializer):
@@ -33,7 +34,14 @@ class ListCreationSerializer(serializers.Serializer):
 
 class ListSerializer(serializers.ModelSerializer):
     agent_role = AgentRoleSerializer(read_only=True) # to view the agent when querying a List
+    owner = UserSerializer(read_only=True)
+    updated_at = serializers.SerializerMethodField(
+        method_name='get_formatted_date')
 
     class Meta:
         model = List
-        fields = ['id', 'name', 'description', 'agent_role', 'is_closed', 'owner', 'created_at']
+        fields = ['id', 'name', 'description', 'agent_role', 'is_closed', 'owner', 'updated_at']
+
+    # Provide a more simple date information for the front end
+    def get_formatted_date(self, list: List):
+        return list.updated_at.strftime('%Y-%m-%d')
