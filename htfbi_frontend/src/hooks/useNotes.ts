@@ -13,12 +13,17 @@ export interface Response {
   agent_response: string;
 }
 
+
+export interface User {
+	username: string;
+}
+
 export interface Note {
 	id: number;
 	video: Video;
 	response: Response;
 	note_list: number;
-	owner: number;
+	owner: User;
 	comments_count: number;
 	votes_count: number;
 	created_at: string;

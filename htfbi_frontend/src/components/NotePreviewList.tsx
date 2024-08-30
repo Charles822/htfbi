@@ -24,7 +24,6 @@ const NotePreviewList = ({ listId }: Props) => {
   const { execute, data, error, isLoading } = useNotes(listId);
   const token = localStorage.getItem('authTokens');
   const userId = token ? jwtDecode(token).user_id : null;
-  // const userId = jwtDecode(localStorage.getItem('authTokens')).user_id;
   console.log(data);
 
   useEffect(() => {

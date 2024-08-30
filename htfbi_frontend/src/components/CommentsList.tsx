@@ -70,11 +70,12 @@ const CommentsList = ({ noteId }: Props) => {
         <h3 className="text-lg font-bold mb-6">Comments for this Note</h3>
         {data && data.map((comment) => 
           <div key={comment.id} className="mb-1">
+            <Separator className='mb-2 my-2'/>
             <Card>
               <CardHeader>
                 <div className="grid flex-1 gap-4 lg:grid-cols-7 xl:grid-cols-7 justify-between text-sm">
-                  <span className="col-span-3">From: @{comment.owner}</span>
-                  <span className="col-span-3">At: {comment.created_at}</span>
+                  <span className="col-span-3">From: <a className="text-rose-700"> @{comment.owner.username}</a></span>
+                  <span className="col-span-3">At: {comment.updated_at}</span>
                   <div className="flex justify-end items-center">
                   {showButton(comment.owner, (<Button 
                     variant="destructive" 

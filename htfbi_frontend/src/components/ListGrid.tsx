@@ -35,28 +35,27 @@ const ListGrid = () => {
       <h1 className="my-2 px-6 text-2xl font-bold">All Lists</h1>
       <div>
         {data && data.map((list) => 
-          <div key={list.id} className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1 mb-1">
-            <div className="border-t-1">
-              <Link to={`/list/${list.id}`}>
-                <Card className="border-none outline-none hover:bg-gray-100">
-                  <CardHeader>
-                    <CardTitle className="my-2 text-md">{list.name}</CardTitle>
-                    <CardDescription className="grid flex-1 gap-4 sm:md:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 justify-between">
-                      <ul className="col-span-1">
-                        <li>Purpose: {list.description}</li>
-                        <li>Agent Role: {list.agent_role.description}</li>
-                      </ul>
-                      <ul className="col-span-1">
-                        <li>List created by {list.owner}</li>
-                        <li>On: {list.created_at}</li>
-                      </ul>
-                    </CardDescription>
-                  </CardHeader>
-                  <CardFooter>
-                  </CardFooter>
-                </Card>
-              </Link>
-            </div>
+          <div key={list.id} className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-2 lg:grid-cols-1 xl:grid-cols-1 mb-1">
+            <Separator className='gap-0'/>
+            <Link to={`/list/${list.id}`}>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="my-2 text-md">{list.name}</CardTitle>
+                  <CardDescription className="grid flex-1 gap-4 sm:md:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 justify-between">
+                    <ul className="col-span-1">
+                      <li>Purpose: {list.description}</li>
+                      <li>Agent Role: {list.agent_role.description}</li>
+                    </ul>
+                    <ul className="col-span-1">
+                      <li>List created by <a className="text-rose-700"> @{list.owner.username}</a></li>
+                      <li>On: {list.updated_at}</li>
+                    </ul>
+                  </CardDescription>
+                </CardHeader>
+                <CardFooter>
+                </CardFooter>
+              </Card>
+            </Link>
           </div>
         )}
       </div>

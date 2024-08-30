@@ -7,12 +7,16 @@ export interface AgentRole {
   created_at: string;
 }
 
+export interface User {
+  username: string;
+}
+
 export interface List {
 	id: number;
 	name: string;
 	description: string;
 	agent_role: AgentRole;
-	owner: number;
+	owner: User;
 	updated_at: string;
 	created_at: string;
 }

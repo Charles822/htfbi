@@ -1,12 +1,15 @@
 import useData from "./useData.ts";
 
+export interface User {
+	username: string;
+}
 
 export interface Comment {
 	id: number;
 	note: number;
 	text: string;
-	owner: number;
-	created_at: string;
+	owner: User;
+	updated_at: string;
 }
 
 const useComments = (
