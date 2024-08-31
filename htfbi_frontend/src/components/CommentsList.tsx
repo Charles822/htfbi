@@ -23,7 +23,6 @@ const CommentsList = ({ noteId }: Props) => {
   const { execute, data, error, isLoading } = useComments(noteId, undefined, undefined, 'get', 'list');
   const token = localStorage.getItem('authTokens');
   const userId = token ? jwtDecode(token).user_id : null;
-  console.log(data);
 
   const deleteComment = useCallback(async (commentId: number) => {
     console.log("Attempting to delete comment with ID:", commentId);
@@ -50,13 +49,14 @@ const CommentsList = ({ noteId }: Props) => {
 
   useEffect(() => {
     execute(); // Trigger fetching the comment list
+    console.log(data['comments'])
   }, []); // need to add depency execute in prod server
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading note: {error.message}</p>;
 
   // Check if data is defined and not an array
-  if (!data || !Array.isArray(data)) return <p>No comments available.</p>;
+  if (!data.comments || !Array.isArray(data.comments)) return <p>Be the first to comment on this note!</p>;
 
   const showButton = (comment_owner, element) => {
     if (comment_owner === userId)
@@ -68,7 +68,7 @@ const CommentsList = ({ noteId }: Props) => {
     <>
       <div >
         <h3 className="text-lg font-bold mb-6">Comments for this Note</h3>
-        {data && data.map((comment) => 
+        {data.comments && data.comments.map((comment) => 
           <div key={comment.id} className="mb-1">
             <Separator className='mb-2 my-2'/>
             <Card>
@@ -77,7 +77,7 @@ const CommentsList = ({ noteId }: Props) => {
                   <span className="col-span-3">From: <a className="text-rose-700"> @{comment.owner.username}</a></span>
                   <span className="col-span-3">At: {comment.updated_at}</span>
                   <div className="flex justify-end items-center">
-                  {showButton(comment.owner, (<Button 
+                  {showButton(comment.owner.id, (<Button 
                     variant="destructive" 
                     size="icon" 
                     className="p-01 w-4 h-4"

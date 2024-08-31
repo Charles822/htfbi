@@ -53,19 +53,21 @@ function CommentForm({ noteId, isSubmitted }: Props) {
 
 
   // Call useLists at the top level
-  const { execute, data, error, isLoading } = useComments(undefined, undefined, 'post', undefined);
+  const { execute, data, error, isLoading } = useComments(undefined, undefined, undefined, 'post', undefined);
 
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {
-    const user = jwtDecode(localStorage.getItem('authTokens')).user_id;
+    const token = localStorage.getItem('authTokens');
+    const userId = token ? jwtDecode(token).user_id : null;
     const comment_data = {
       note: noteId, 
       text: values.text, 
-      owner: user,
+      owner: userId,
     };
 
     // Call the API request here
+    console.log(comment_data);
     await execute(comment_data);
 
     if (error) {

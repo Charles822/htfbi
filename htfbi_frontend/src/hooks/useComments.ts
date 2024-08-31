@@ -30,7 +30,7 @@ const useComments = (
       ? `/interactions/comments/${commentId}/`
       : endpointType === 'count'
       ? `/interactions/comments/comments_count/?note=${noteId}`
-      : `/interactions/comments/?note=${noteId}`;
+      : `/interactions/comments/note_comments/?note=${noteId}`;
 
 	return useData<Comment>(endpoint, method, requestData);
 	}

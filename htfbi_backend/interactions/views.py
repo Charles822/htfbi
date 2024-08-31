@@ -44,8 +44,8 @@ class CommentViewSet(ModelViewSet):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=['get'], url_path='user_comments')
-    def user_comments(self, request, *args, **kwargs):
+    @action(detail=False, methods=['get'], url_path='note_comments')
+    def note_comments(self, request, *args, **kwargs):
         serializer = GetCommentsSerializer(data=request.query_params)
 
         if serializer.is_valid():
@@ -53,9 +53,9 @@ class CommentViewSet(ModelViewSet):
             
             if comments.exists():
                 comments_data = CommentSerializer(comments, many=True).data
-                return Response({'has_commented': True, 'comments': comments_data}, status=status.HTTP_200_OK)
+                return Response({'have_comments': True, 'comments': comments_data}, status=status.HTTP_200_OK)
         
-        return Response({'has_commented': False}, status=status.HTTP_200_OK)
+        return Response({'no_comments': False}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'], url_path='comments_count')
     def comments_count(self, request, *args, **kwargs):
