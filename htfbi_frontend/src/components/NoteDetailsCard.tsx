@@ -48,6 +48,19 @@ const NoteDetailsCard = () => {
       </a>
     );
   };
+
+  const TextWithLineBreaks = ({ text }) => {
+  return (
+    <div className="text-sm text-stone-600">
+      {text.split('\n').map((line, index) => (
+        <p key={index}>
+          {line}
+          <br />
+        </p>
+      ))}
+    </div>
+  );
+};
   
   return (
     <div className="grid flex-1 items-start justify-between gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1">
@@ -71,8 +84,8 @@ const NoteDetailsCard = () => {
         </CardHeader>
         <Separator className="my-2 mx-auto w-2/3"/>
         <CardContent>
-          <h3 className="my-2 font-medium text-rose-700">Agent Response</h3>
-          <p className="text-sm text-stone-600">{note.response.agent_response}</p>
+          <h3 className="my-2 text-rose-700">Agent Response</h3>
+          <TextWithLineBreaks text={note.response.agent_response} />
         </CardContent>
         <CardFooter className="grid flex-1 gap-0 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-6 xl:grid-cols-6 mb-1">
           <Vote noteId={note.id} userId={userId} ></Vote>
