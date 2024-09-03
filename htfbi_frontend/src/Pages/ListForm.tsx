@@ -60,12 +60,19 @@ function ListForm() {
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {
-    const owner = jwtDecode(localStorage.getItem('authTokens')).user_id;
+  	const token = localStorage.getItem('authTokens');
+  	
+  	if (!token) {
+    	toast({ variant: "danger", description: "Please log in to create a list." });
+    	return;
+  	}
+
+    const owner = jwtDecode(token).user_id;
     const list_data = {
       name: values.name, 
       description: values.description, 
       agent_role_description: values.agent_role, 
-      owner
+      owner: owner
     };
 
     // Call the API request here

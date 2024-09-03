@@ -168,7 +168,10 @@ export default function SignUpForm() {
     <>
       <Logo />
       <div className="grid flex-1 gap-4 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-2 xl:grid-cols-2" >
-        <h1 className="text-4xl font-semibold my-40">Extract and share key ideas from <a className="underline decoration-rose-700">2h+ long </a>Youtube podcasts in 1min.</h1>
+        <div className='my-40 mx-10'>
+          <h1 className="text-4xl font-semibold mb-2">Why do the <a className="underline decoration-rose-700">best ideas </a>come to those who don't need them? </h1>
+          <p className="text-xl font-medium">Extract and share the best ideas from <a className="underline decoration-rose-700">2h+ long </a>Youtube podcasts in 1min.</p>
+        </div>
         <Card className="mx-auto my-10 max-w-sm">
           <CardHeader>
             <CardTitle className="text-2xl">Create a new account</CardTitle>

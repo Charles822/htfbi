@@ -10,8 +10,10 @@ from core.permissions import AdminOnly, IsOwnerOrAdmin
 
 def get_permissions_based_on_action(action):
     # No permission required for retrieving a resource
-    if action in ['retrieve', 'post']:
+    if action in ['retrieve', 'list']:
         return [AllowAny]
+    elif action == 'post':
+        return [IsAuthenticated]
 
     # For other actions, only allow the owner or an admin
     else:

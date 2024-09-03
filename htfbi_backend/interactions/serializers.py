@@ -31,7 +31,6 @@ class GetCommentsSerializer(serializers.Serializer):
 
     def get_comments(self, validated_data):
         note_id = validated_data['note']
-
         comments = Comment.objects.filter(note=note_id)
         
         return comments
@@ -83,13 +82,13 @@ class VoteCreationSerializer(serializers.Serializer):
 
 class GetVoteSerializer(serializers.Serializer):
     note = serializers.IntegerField(required=True)
-    user = serializers.IntegerField(required=True)
+    owner = serializers.IntegerField(required=True)
 
     def get_vote(self, validated_data):
         note_id = validated_data['note']
-        user_id = validated_data['user']
+        user_id = validated_data['owner']
 
-        vote = Vote.objects.filter(note=note_id, user=user_id).first()
+        vote = Vote.objects.filter(note=note_id, owner=user_id).first()
         
         return vote
 

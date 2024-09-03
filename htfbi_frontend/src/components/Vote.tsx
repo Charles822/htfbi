@@ -1,6 +1,8 @@
 import {ArrowBigUp, ArrowBigDown}from "lucide-react"
 import useVotes from '../hooks/useVotes'
 import { ReactNode, useState, useCallback, useEffect } from "react"
+import { useToast } from "@/components/ui/use-toast"
+import { Toaster } from "@/components/ui/toaster"
 
 interface Props {
 	noteId: number;
@@ -16,6 +18,9 @@ const Vote = ({ noteId, userId, voteId }: Props) => {
 	const { execute: execute_post, data: new_vote_data } = useVotes(undefined, undefined, 'post'); // create a vote 
 	const { execute: execute_votes_sum, data: votes_sum, error: votes_sum_error } = useVotes(noteId, undefined); // Get votes sum
 	const [voteSum, setVoteSum] = useState<number>(0);
+	const { toast } = useToast();
+
+	console.log(voteStatus)
 	
 	// Fetch initial vote datas 
 	const fetchData = useCallback(async () => {
@@ -63,6 +68,17 @@ const Vote = ({ noteId, userId, voteId }: Props) => {
 	    setVoteSum(0) // Default if no vote
 	  }
   }, [votes_sum]); // need to add dependency execute in prod server
+
+	function check_login_status() {
+    	const token = localStorage.getItem('authTokens');
+
+		if (!token) {
+			toast({ variant: "error", description: "Please log in to vote." });
+		    return false;
+		};
+
+		return true;	
+	}
 
     const updateVote = async (new_vote_value: number) => {
 	    const previousVoteStatus = voteStatus;
@@ -123,28 +139,31 @@ const Vote = ({ noteId, userId, voteId }: Props) => {
 	return (
 		<div className="grid flex-1 justify-center items-center gap-0 p-4 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-3 xl:grid-cols-3">
 			<div className="flex justify-center items-center flex-1">
-				<ArrowBigUp onClick={() => 
+				<ArrowBigUp onClick={() => {
+					if (!check_login_status()) return;
 					voteStatus === 1 
 						? updateVote(0) 
 						: (voteStatus === 0 || voteStatus === -1)
 						? updateVote(1) 
 						: createVote(1)
-					}
+					}}
 					color={upColor}
 					strokeWidth={1} />
 			</div>
 			<div className="flex justify-center items-center flex-1 text-sm text-stone-600" >{voteSum}</div>
 			<div className="flex justify-center items-center flex-1">
-				<ArrowBigDown onClick={() => 
+				<ArrowBigDown onClick={() => {
+					if (!check_login_status()) return;				
 					voteStatus === -1 
 						? updateVote(0) 
 						: (voteStatus === 0 || voteStatus === 1)
 						? updateVote(-1) 
 						: createVote(-1)
-					}
+					}}
 					color={downColor} 
 					strokeWidth={1} />
 			</div>
+			<Toaster />
 		</div>
 	)
 }

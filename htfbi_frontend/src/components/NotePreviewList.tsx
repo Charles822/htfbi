@@ -34,7 +34,7 @@ const NotePreviewList = ({ listId }: Props) => {
   if (error) return <p>Error loading note: {error.message}</p>;
 
   // Check if data is defined and not an array
-  if (!data || !Array.isArray(data) || data === []) return <p>No notes available.</p>;
+  if (!data || !Array.isArray(data)) return <p>No notes available.</p>;
 
   // Tell the users when there are no notes yet in a list
   function noNotesMessage() {

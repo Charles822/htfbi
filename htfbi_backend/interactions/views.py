@@ -79,6 +79,9 @@ class CommentViewSet(ModelViewSet):
 class VoteViewSet(ModelViewSet):
     serializer_class = VoteSerializer
 
+    def get_permissions(self):
+        return [permission() for permission in get_permissions_based_on_action(self.action)]
+
     def get_queryset(self):
         note_id = self.kwargs.get('note_pk')
         if note_id is not None:

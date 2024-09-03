@@ -1,6 +1,7 @@
 import axios, { CanceledError, AxiosRequestConfig, AxiosError } from "axios";
 import { useState, useEffect } from "react";
-import apiClient from '../services/api-client';
+// import apiClient from '../services/api-client';
+import { axiosInstance } from '../services/api-client';
 
 const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch' | 'delete', requestData?: any, requestConfig?: AxiosRequestConfig, deps?: any[]) => {
   const [data, setData] = useState<T[]>([]);
@@ -10,7 +11,7 @@ const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch' | 'delete
   const execute = async (requestData) => {
     setLoading(true);
     try {
-      const response = await apiClient({
+      const response = await axiosInstance({
         url: endpoint,
         method,
         data: requestData,

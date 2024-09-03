@@ -59,6 +59,12 @@ function CommentForm({ noteId, isSubmitted }: Props) {
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {
     const token = localStorage.getItem('authTokens');
+    
+    if (!token) {
+      toast({ variant: "", description: "Please log in to comment." });
+      return;
+    }
+
     const userId = token ? jwtDecode(token).user_id : null;
     const comment_data = {
       note: noteId, 

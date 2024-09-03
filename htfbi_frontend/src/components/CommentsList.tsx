@@ -74,8 +74,8 @@ const CommentsList = ({ noteId }: Props) => {
             <Card>
               <CardHeader>
                 <div className="grid flex-1 gap-4 lg:grid-cols-7 xl:grid-cols-7 justify-between text-sm">
-                  <span className="col-span-3">From: <a className="text-rose-700"> @{comment.owner.username}</a></span>
-                  <span className="col-span-3">At: {comment.updated_at}</span>
+                  <span className="col-span-3 text-sm text-stone-600">From: <a className="text-rose-700"> @{comment.owner.username}</a></span>
+                  <span className="col-span-3 text-sm text-stone-600">At: {comment.updated_at}</span>
                   <div className="flex justify-end items-center">
                   {showButton(comment.owner.id, (<Button 
                     variant="destructive" 
@@ -91,7 +91,7 @@ const CommentsList = ({ noteId }: Props) => {
                 </div>
               </CardHeader>
                 <CardContent className="grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between text-sm">
-                  <p>{comment.text}</p>
+                  <p className='text-sm text-stone-600'>{comment.text}</p>
                 </CardContent>
               <CardFooter className="grid flex-1 gap-0 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-6 xl:grid-cols-6 mb-1">
               </CardFooter>

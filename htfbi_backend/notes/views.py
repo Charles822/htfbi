@@ -10,7 +10,7 @@ from core.permissions import AdminOnly
 
 def get_permissions_based_on_action(action):
     # No permission required for retrieving a resource
-    if action == 'retrieve':
+    if action in ['retrieve', 'list']:
         return [AllowAny]
         
     # For other actions, only allow the owner or an admin
