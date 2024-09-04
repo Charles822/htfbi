@@ -1,4 +1,8 @@
+from datetime import datetime
 from rest_framework import serializers
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from .models import Note
 from ai_agent.models import AgentResponse, AgentRole
 from contents.models import Video, Transcript
@@ -18,63 +22,99 @@ class NoteCreationSerializer(serializers.Serializer):
     owner = serializers.IntegerField(required=True)
 
     def create(self, validated_data):
-        # get the youtube video ID
         youtube_url = validated_data['youtube_url']
+        list_id = validated_data['note_list']
+        owner_id = validated_data['owner']
+
+        # check if a note associated to this video already exists in the list before going further
+        video = Video.objects.filter(youtube_url=youtube_url)
+        if video.exists():
+            video_instance=video.get()
+        
+            if Note.objects.filter(video=video_instance).exists():
+                raise ValidationError({"error": "A note for this content already exists in this list."})
+
+        # get the youtube video ID
+        
         youtube_video_id = extract_video_id(youtube_url)
 
-        # Create the Video instance
-        video_data = fetch_video_info(youtube_video_id)
-        print(video_data)
+        # Create or retrieve the video instance
+        def get_video_instance(youtube_video_id):
+            # check if the video instance already exists
+            existing_video_instance = Video.objects.filter(youtube_video_id=youtube_video_id)
+            print('video_instance: ', existing_video_instance)
+            if existing_video_instance:
+                return existing_video_instance.get()
 
-        if 'items' not in video_data or not video_data['items']:
-            return Response({"error": "Invalid video ID or no data found"}, status=status.HTTP_404_NOT_FOUND)
+            # if not, create a new one
+            video_data = fetch_video_info(youtube_video_id)
+            print(video_data)
 
-        # Extract the relevant data
-        video_info = video_data['items'][0]['snippet']
-        content_detail = video_data['items'][0]['contentDetails']
+            if 'items' not in video_data or not video_data['items']:
+                return Response({"error": "Invalid video ID or no data found"}, status=status.HTTP_404_NOT_FOUND)
 
-        #Verify that default language is provided
-        def is_original_language_provided(): 
-            if 'defaultAudioLanguage' in video_info:
-                return video_info['defaultAudioLanguage']
-            return 'na'
+            # Extract the relevant data
+            video_info = video_data['items'][0]['snippet']
+            content_detail = video_data['items'][0]['contentDetails']
 
-        original_language = is_original_language_provided()
+            #Verify that default language is provided
+            def is_original_language_provided(): 
+                if 'defaultAudioLanguage' in video_info:
+                    return video_info['defaultAudioLanguage']
+                return 'na'
 
-        video_instance = Video.objects.create(
-            youtube_video_id=youtube_video_id,
-            title=video_info['title'],
-            channel_name=video_info['channelTitle'],
-            youtube_url=youtube_url,
-            published_at=video_info['publishedAt'],
-            duration=content_detail['duration'],
-            tags=video_info.get('tags', []),
-            original_language=original_language
-        )
-        
-        # Create the Transcript instance
+            original_language = is_original_language_provided()
+
+            new_video_instance = Video.objects.create(
+                youtube_video_id=youtube_video_id,
+                title=video_info['title'],
+                channel_name=video_info['channelTitle'],
+                youtube_url=youtube_url,
+                published_at=video_info['publishedAt'],
+                duration=content_detail['duration'],
+                tags=video_info.get('tags', []),
+                original_language=original_language
+            )
+            
+            return new_video_instance
+
+        video_instance = get_video_instance(youtube_video_id)
 
         # Check if the video exists
         try:
             video_instance
         except video_instance.DoesNotExist:
             return Response({"error": "Video not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-        video_transcript = fetch_video_transcript(video_instance.id) # Fetch transcript
-        
-        if video_transcript is None: #catch error
-            return Response({"error": "Transcript not found or error fetching transcript"}, status=status.HTTP_404_NOT_FOUND)
 
-        transcript_instance = Transcript.objects.create(
-            transcript_text=video_transcript,
-            video=video_instance,
-        )
+
+
+        # get or create transcript instance
+        def get_transcript_instance(video_instance):
+            # Check if the transcript instance exists 
+            existing_transcript = Transcript.objects.filter(video=video_instance.id)
+            if existing_transcript:
+                return existing_transcript.get()
+
+            # if it doesn't exist, create a new transcript 
+            video_transcript = fetch_video_transcript(video_instance.id)
+
+            if video_transcript is None: #catch error
+                return Response({"error": "Transcript not found or error fetching transcript"}, status=status.HTTP_404_NOT_FOUND)
+
+            new_transcript_instance = Transcript.objects.create(
+                transcript_text=video_transcript,
+                video=video_instance,
+            )
+
+            return new_transcript_instance
+
+        transcript_instance = get_transcript_instance(video_instance)
 
         # Create the AgentResponse instance
         
         # get agent_id via the List
-        list_id = validated_data['note_list']
-        owner_id = validated_data['owner']
+        list_id = list_id
+        owner_id = owner_id
         list_instance = List.objects.get(id=list_id)
         agent_id = list_instance.agent_role_id
         agent_role = AgentRole.objects.get(id=agent_id)
@@ -127,6 +167,10 @@ class NoteSerializer(serializers.ModelSerializer):
 
     # Provide a more simple date information for the front end
     def get_formatted_date(self, note: Note):
+        if isinstance(note.created_at, str):
+            # Parse the date string into a datetime object
+            note.created_at = datetime.fromisoformat(note.created_at)
+            return note.created_at.strftime('%Y-%m-%d')
         return note.created_at.strftime('%Y-%m-%d')
 
 

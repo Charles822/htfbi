@@ -37,16 +37,16 @@ def agent_one(chunk, agent_role):
     messages=[
         {
             "role": "system",
-            "content": agent_role
+            "content": agent_role + " answer in english even if the text is in a different language."
         },
         {
             "role": "user",
             "content": chunk
         }
     ],
-    model="llama3-8b-8192",
+    model="llama-3.1-70b-versatile",
     temperature=0.5,
-    max_tokens=500,
+    max_tokens=100,
     top_p=1,
     stop=None,
     stream=False,
@@ -59,14 +59,14 @@ def agent_two(agent_one_response):
     messages=[
         {
             "role": "system",
-            "content": "You are a 20 years expert in writting and synthesis. Trim redudancies but keep the ideas and structure. At the end of your response, invite people to leave a comment."
+            "content": "You are a 20 years expert in writting and synthesis. Please translate your response in English language only. Trim redudancies but keep the ideas and structure. At the end of your response, invite people to leave a comment."
         },
         {
             "role": "user",
             "content": agent_one_response
         }
     ],
-    model="llama3-8b-8192",
+    model="llama-3.1-70b-versatile",
     temperature=0.5,
     max_tokens=1024,
     top_p=1,

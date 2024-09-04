@@ -18,12 +18,12 @@ import { z } from "zod"
 
 import { useToast } from "@/components/ui/use-toast"
 import { Toaster } from "@/components/ui/toaster"
- 
+import { LoaderIcon } from "lucide-react"
+
 
 const formSchema = z.object({
   youtube_url: z.string().url(),
 })
-
 
 type FormData = z.infer<typeof formSchema>;
 
@@ -49,29 +49,32 @@ function NoteForm({ listId, isSubmitted }: Props) {
   const { toast } = useToast();
 
 
-  // Call useLists at the top level
+  // Call useNotes at the top level
   const { execute, data, error, isLoading } = useNotes(undefined, undefined, 'post');
 
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {
-    const owner = jwtDecode(localStorage.getItem('authTokens')).user_id;
-    const note_data = {
-      youtube_url: values.youtube_url, 
-      note_list: listId, 
-      owner
-    };
+    try {
+      const owner = jwtDecode(localStorage.getItem('authTokens')).user_id;
+      const note_data = {
+        youtube_url: values.youtube_url, 
+        note_list: listId, 
+        owner
+      };
+    
+      // Call the API request here
+      await execute(note_data);
+      console.log('ERRRORORORORORORORORO', error)
 
-    // Call the API request here
-    await execute(note_data);
-
-    if (error) {
-      console.error('Error creating note:', error);
-    } else {
-      console.log('Note created successfully:', data);
-      toast({variant: "success", description: "Your note has been created successfully!"});
+      toast({ variant: "success", description: "Your note has been created successfully!" });
       reset();
       isSubmitted(true);
+
+    } catch (err) {
+      console.error('Error creating note:', err.message);
+      toast({ variant: "destructive", description: err.message });
+      reset();
     }
   };
 
@@ -88,7 +91,7 @@ function NoteForm({ listId, isSubmitted }: Props) {
 		            <FormItem>
 		              <FormLabel>Youtube Video Link</FormLabel>
 		              <FormControl>
-		                <Input placeholder="Paste the link here" {...field} />
+		                <Input disabled={isSubmitting} placeholder="Paste the link here" {...field} />
 		              </FormControl>
 		              <FormDescription>
 		                Copy the link of your youtube video and paste here. Then let the magic happen!
@@ -97,7 +100,7 @@ function NoteForm({ listId, isSubmitted }: Props) {
 		            </FormItem>
 		          )}
 		        />
-		        <Button type="submit" disabled={isSubmitting || !isDirty || !isValid}>Submit</Button>
+            {isSubmitting ? <div><LoaderIcon className="animate-spin" /><a>The agent is working on your note...</a></div>  : <Button type="submit" disabled={isSubmitting || !isDirty || !isValid}>Submit</Button> }
 		        <Toaster />
 		      </form>
 		    </Form>

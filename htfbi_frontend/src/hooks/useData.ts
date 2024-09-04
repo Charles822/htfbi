@@ -19,15 +19,15 @@ const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch' | 'delete
       });
       console.log('Response data:', response.data);
       setData(response.data);
-    } 
-    catch (err) {
-    if (axios.isAxiosError(err)) {
-      const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
-      setError(errorMessage); 
-    } else {
-      setError('An unexpected error occurred');
-    }
-    console.error('Error fetching data:', err);
+      return response.data; // Return data on success
+    } catch (err) {
+      let errorMessage = 'An unexpected error occurred';
+      if (axios.isAxiosError(err)) {
+        errorMessage = err.response?.data?.error || err.message || errorMessage;
+      }
+      setError(errorMessage);
+      console.error('Error fetching data:', errorMessage);
+      throw new Error(errorMessage); // Throw error to handle in onSubmit
   } finally {
     setLoading(false);
     }
