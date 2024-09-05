@@ -35,7 +35,7 @@ const ListGrid = () => {
       <h1 className="my-2 px-6 text-2xl font-bold">All Lists</h1>
       <div>
         {data && data.map((list) => 
-          <div key={list.id} className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-2 lg:grid-cols-1 xl:grid-cols-1 mb-1">
+          <div key={list.id} className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-2 lg:grid-cols-1 xl:grid-cols-1 mb-2">
             <Separator className='gap-0'/>
             <Link to={`/list/${list.id}`}>
               <Card>

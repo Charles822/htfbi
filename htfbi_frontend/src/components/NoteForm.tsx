@@ -18,7 +18,7 @@ import { z } from "zod"
 
 import { useToast } from "@/components/ui/use-toast"
 import { Toaster } from "@/components/ui/toaster"
-import { LoaderIcon } from "lucide-react"
+import { LoaderCircle } from "lucide-react"
 
 
 const formSchema = z.object({
@@ -65,7 +65,6 @@ function NoteForm({ listId, isSubmitted }: Props) {
     
       // Call the API request here
       await execute(note_data);
-      console.log('ERRRORORORORORORORORO', error)
 
       toast({ variant: "success", description: "Your note has been created successfully!" });
       reset();
@@ -80,31 +79,33 @@ function NoteForm({ listId, isSubmitted }: Props) {
 
   return (
   	<>
-	  	<div>
-	  		<h3 className="text-lg font-bold">Create a new Note in this List</h3>
-		    <Form {...form} >
-		      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-		        <FormField
-		          control={form.control}
-		          name="youtube_url"
-		          render={({ field }) => (
-		            <FormItem>
-		              <FormLabel>Youtube Video Link</FormLabel>
-		              <FormControl>
-		                <Input disabled={isSubmitting} placeholder="Paste the link here" {...field} />
-		              </FormControl>
-		              <FormDescription>
-		                Copy the link of your youtube video and paste here. Then let the magic happen!
-		              </FormDescription>
-		              <FormMessage />
-		            </FormItem>
-		          )}
-		        />
-            {isSubmitting ? <div><LoaderIcon className="animate-spin" /><a>The agent is working on your note...</a></div>  : <Button type="submit" disabled={isSubmitting || !isDirty || !isValid}>Submit</Button> }
-		        <Toaster />
-		      </form>
-		    </Form>
-	    </div>
+	  	<div className='rounded-lg bg-background p-4 outline outline-gray-100'>
+        <div className='items-start'>
+  	  		<h3 className="text-lg font-bold">Create a new Note in this List</h3>
+  		    <Form {...form} >
+  		      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+  		        <FormField
+  		          control={form.control}
+  		          name="youtube_url"
+  		          render={({ field }) => (
+  		            <FormItem>
+  		              <FormLabel>Youtube Video Link</FormLabel>
+  		              <FormControl>
+  		                <Input disabled={isSubmitting} placeholder="Paste the link here" {...field} />
+  		              </FormControl>
+  		              <FormDescription>
+  		                Copy the link of your youtube video and paste here. Then let the magic happen!
+  		              </FormDescription>
+  		              <FormMessage />
+  		            </FormItem>
+  		          )}
+  		        />
+              {isSubmitting ? <div><LoaderCircle className="animate-spin text-rose-700" /><a>The agent is working on your note...</a></div>  : <Button type="submit" disabled={isSubmitting || !isDirty || !isValid}>Submit</Button> }
+  		        <Toaster />
+  		      </form>
+  		    </Form>
+  	    </div>
+      </div>
     </>
   )  
 

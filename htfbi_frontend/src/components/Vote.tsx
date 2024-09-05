@@ -133,37 +133,33 @@ const Vote = ({ noteId, userId, voteId }: Props) => {
   	};
 
 
-	const upColor = voteStatus === 1 ? 'red' : 'black';
-  	const downColor = voteStatus === -1 ? 'red' : 'black';
+	const upColor = voteStatus === 1 ? 'text-rose-500 fill-rose-500' : 'text-gray-500';
+  	const downColor = voteStatus === -1 ? 'text-rose-500 fill-rose-500' : 'text-gray-500';
+  	const countColor = (voteStatus === -1 || voteStatus === 1) ? 'text-rose-700' : 'text-gray-500';
 
 	return (
-		<div className="grid flex-1 justify-center items-center gap-0 p-4 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-3 xl:grid-cols-3">
-			<div className="flex justify-center items-center flex-1">
-				<ArrowBigUp onClick={() => {
-					if (!check_login_status()) return;
-					voteStatus === 1 
-						? updateVote(0) 
-						: (voteStatus === 0 || voteStatus === -1)
-						? updateVote(1) 
-						: createVote(1)
-					}}
-					color={upColor}
-					strokeWidth={1} />
-			</div>
-			<div className="flex justify-center items-center flex-1 text-sm text-stone-600" >{voteSum}</div>
-			<div className="flex justify-center items-center flex-1">
-				<ArrowBigDown onClick={() => {
-					if (!check_login_status()) return;				
-					voteStatus === -1 
-						? updateVote(0) 
-						: (voteStatus === 0 || voteStatus === 1)
-						? updateVote(-1) 
-						: createVote(-1)
-					}}
-					color={downColor} 
-					strokeWidth={1} />
-			</div>
-			<Toaster />
+		<div className="flex items-center space-1 rounded-lg outline outline-gray-200 px-1  w-auto">
+			<ArrowBigUp onClick={() => {
+				if (!check_login_status()) return;
+				voteStatus === 1 
+					? updateVote(0) 
+					: (voteStatus === 0 || voteStatus === -1)
+					? updateVote(1) 
+					: createVote(1)
+				}}
+				className={`${upColor}`}
+				strokeWidth={1} />
+			<div className={`text-sm ${countColor}`} >{voteSum}</div>
+			<ArrowBigDown onClick={() => {
+				if (!check_login_status()) return;				
+				voteStatus === -1 
+					? updateVote(0) 
+					: (voteStatus === 0 || voteStatus === 1)
+					? updateVote(-1) 
+					: createVote(-1)
+				}}
+				className={`${downColor}`} 
+				strokeWidth={1} />
 		</div>
 	)
 }

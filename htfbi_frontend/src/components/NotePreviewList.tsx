@@ -15,6 +15,7 @@ import Vote from './Vote';
 import CommentsPreview from './CommentsPreview';
 import useNotes from "../hooks/useNotes"; 
 import  { jwtDecode } from 'jwt-decode';
+import { UrlLink } from '../utils/Formatting';
 
 interface Props {
   listId: number;
@@ -48,30 +49,33 @@ const NotePreviewList = ({ listId }: Props) => {
         <h3 className="text-lg font-bold mb-6">Notes in this List</h3>
         {noNotesMessage()}
         {data && data.map((note) => 
-          <div key={note.id} className="mb-1">
-            <Link to={`/note/${note.id}`}>
+          <div key={note.id} className="mb-2">
+            <Separator className='gap-0 mb-1'/>
               <Card>
-                <CardHeader>
-                  <CardTitle className="my-2 text-md">{note.video.title}</CardTitle>
-                  <CardDescription className="grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between">
-                    <ul>
-                      <li>Channel: {note.video.channel_name}</li>
-                      <li>{note.video.youtube_url}</li>
-                      <li>Original language: {note.video.original_language}</li>
-                      <li>Published date: {note.video.published_at}</li>
-                    </ul>
-                    <ul>
-                      <li>Note created by {note.owner.username}</li>
-                      <li>On: {note.created_at}</li>
-                    </ul>
-                  </CardDescription>
-                </CardHeader>
-                <CardFooter className="grid flex-1 gap-0 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-6 xl:grid-cols-6 mb-1">
+                <Link to={`/note/${note.id}`}>
+                  <CardHeader>
+                    <CardTitle className="my-2 text-md">{note.video.title}</CardTitle>
+                    <CardDescription className="grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between">
+                      <ul>
+                        <li>Channel: {note.video.channel_name}</li>
+                        <li>
+                          <UrlLink url={note.video.youtube_url} />
+                        </li>
+                        <li>Original language: {note.video.original_language}</li>
+                        <li>Published date: {note.video.published_at}</li>
+                      </ul>
+                      <ul>
+                        <li>Note created by {note.owner.username}</li>
+                        <li>On: {note.created_at}</li>
+                      </ul>
+                    </CardDescription>
+                  </CardHeader>
+                </Link>
+                <CardFooter className="flex items-center justify-start gap-4 sm:px-6 sm:py-1.5">
                   <Vote noteId={note.id} userId={userId} ></Vote>
                   <CommentsPreview noteId={note.id}></CommentsPreview>
                 </CardFooter>
               </Card>
-            </Link>
           </div>
         )}
       </div>

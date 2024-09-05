@@ -4,10 +4,11 @@ import { ReactNode, useState, useCallback, useEffect } from "react"
 
 interface Props {
 	noteId: number;
-
+	updateAfterDelete: boolean;
+	updateAfterPost: boolean;
 }
 
-const CommentsPreview = ({ noteId }: Props) => {
+const CommentsPreview = ({ noteId, updateAfterDelete, updateAfterPost }: Props) => {
 	const [commentCount, setCommentCount] = useState<number>(0);
 	const { execute, data, error } = useComments(noteId, undefined, undefined, 'get', 'count'); // Fetch votes data
 
@@ -16,20 +17,21 @@ const CommentsPreview = ({ noteId }: Props) => {
 	const fetchCommentCount = useCallback(async () => {
 	    try {
 	      await execute();
+	      console.log('triggered after deletion or posting')
 	    } catch (error) {
-	      console.error('Error fetching vote:', error);
+	      console.error('Error fetching comment:', error);
 	      setCommentCount(0); // or any default value
 	    }
-	}, [commentCount]);
+	}, []); // add after delete and post
 
-	useEffect(() => {
-	  fetchCommentCount();
-	}, [fetchCommentCount]);
+  useEffect(() => {
+      fetchCommentCount();
+  }, [fetchCommentCount]);
 
 
 	useEffect(() => {
 		if (data && data.comments_count) {
-			setCommentCount(data.comments_count);	
+			setCommentCount(data.comments_count);
 		} else {
 	    setCommentCount(0); // or any default value
 	  }
@@ -38,14 +40,12 @@ const CommentsPreview = ({ noteId }: Props) => {
 	console.log(commentCount);
 
 	return (
-		<div className="grid flex-1 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-3 xl:grid-cols-3">
-			<div className="flex justify-center items-center flex-1">
-				<MessageCircle
-					color='grey'
-					strokeWidth={1}
-					size={20} />
-			</div>
-			<div className="flex justify-left items-left flex-1 text-sm text-stone-600" >{commentCount}</div>
+		<div className="flex items-center space-2 rounded-lg outline outline-gray-200 px-3 py-0.5 w-auto">
+			<MessageCircle
+				color='grey'
+				strokeWidth={1}
+				size={20} />
+			<div className="text-sm text-stone-600" >{commentCount}</div>
 		</div>
 	)
 }

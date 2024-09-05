@@ -30,6 +30,10 @@ class NoteViewSet(ModelViewSet):
             return Note.objects.filter(note_list=list_id)
         return Note.objects.all()
 
+                # queryset = Note.objects.annotate(
+        #     votes_count=Sum('votes__vote')
+        # ).order_by('-votes_count', '-created_at')
+
     @action(detail=False, methods=['post'], url_path='add_note')
     def add_note(self, request, *args, **kwargs):
         serializer = NoteCreationSerializer(data=request.data)

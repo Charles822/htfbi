@@ -11,13 +11,14 @@ from core.permissions import IsOwnerOrAdmin
 
 def get_permissions_based_on_action(action):
     # No permission required for retrieving a resource
-    if action == 'retrieve':
+    if action == ['retrieve', 'list']:
         return [AllowAny]
     # Allow any authenticated user to create a resource
     elif action == 'create':
         return [IsAuthenticated]
     # For other actions, only allow the owner or an admin
     else:
+        print('yes, he is the owner')
         return [IsOwnerOrAdmin]
 
 

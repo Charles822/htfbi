@@ -17,6 +17,7 @@ import Vote from './Vote';
 import CommentsPreview from './CommentsPreview';
 import CommentsList from './CommentsList';
 import CommentForm from './CommentForm';
+import { UrlLink, TextWithLineBreaks } from '../utils/Formatting';
 
 
 const NoteDetailsCard = () => {
@@ -25,12 +26,12 @@ const NoteDetailsCard = () => {
   const [isSubmitted, setStatus] = useState(false);
   const token = localStorage.getItem('authTokens');
   const userId = token ? jwtDecode(token).user_id : null;
+  const [isDeleted, setUpdateCount] = useState(false);
   console.log(note);
 
   useEffect(() => {
     execute(); // Trigger fetching the note
-    setStatus(false);
-  }, [isSubmitted]); // need to add depency execute in prod server
+  }, []); // need to add depency execute in prod server
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading note: {error.message}</p>;
@@ -38,30 +39,6 @@ const NoteDetailsCard = () => {
   // Check if data is defined and not an array
   if (!note || Array.isArray(note)) return <p>No note available.</p>;
 
-
-  // Create a link for youtube urls
-  const UrlLink = ({ url }) => {
-    console.log(url)
-    return (
-      <a href={url} target="_blank" rel="noopener noreferrer" className='underline decoration-rose-700 text-rose-700'>
-        Video Link
-      </a>
-    );
-  };
-
-  const TextWithLineBreaks = ({ text }) => {
-  return (
-    <div className="text-sm text-stone-600">
-      {text.split('\n').map((line, index) => (
-        <p key={index}>
-          {line}
-          <br />
-        </p>
-      ))}
-    </div>
-  );
-};
-  
   return (
     <div className="grid flex-1 items-start justify-between gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1">
       <Card className="hover:bg-white">
@@ -87,9 +64,9 @@ const NoteDetailsCard = () => {
           <h3 className="my-2 text-rose-700">Agent Response</h3>
           <TextWithLineBreaks text={note.response.agent_response} />
         </CardContent>
-        <CardFooter className="grid flex-1 gap-0 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-6 xl:grid-cols-6 mb-1">
+        <CardFooter className="flex items-center justify-start gap-4 sm:px-6 sm:py-1.5">
           <Vote noteId={note.id} userId={userId} ></Vote>
-          <CommentsPreview noteId={note.id}></CommentsPreview>
+          <CommentsPreview noteId={note.id} updateAfterDelete={isDeleted} updateAfterPost={isSubmitted} ></CommentsPreview>
         </CardFooter>
       </Card>
       <div className="grid flex-1 items-start justify-between gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-2 xl:grid-cols-2" >
@@ -97,7 +74,7 @@ const NoteDetailsCard = () => {
       </div>
       <div className="grid flex-1 gap-4 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-3 xl:grid-cols-3" >
         <div className="grid flex-1 col-span-2" >
-        <CommentsList noteId={note.id} />
+        <CommentsList noteId={note.id} isDeleted={update => setUpdateCount(update)} isSubmitted={isSubmitted} resetSubmission={() => setStatus(false)} resetDeletion={() => setUpdateCount(false)} />
       </div>
       </div>
     </div>

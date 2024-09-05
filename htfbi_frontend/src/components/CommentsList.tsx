@@ -14,15 +14,23 @@ import { Separator } from "@/components/ui/separator";
 import useComments from "../hooks/useComments"; 
 import { baseURL } from "../services/api-client";
 import  { jwtDecode } from 'jwt-decode';
+import { useToast } from "@/components/ui/use-toast"
+import { Toaster } from "@/components/ui/toaster"
 
 interface Props {
   noteId: number;
+  isDeleted: (update: boolean) => void;
+  isSubmitted: boolean;
+  resetSubmission: () => void;
+  resetDeletion: () => void;
+
 }
 
-const CommentsList = ({ noteId }: Props) => { 
+const CommentsList = ({ noteId, isDeleted, isSubmitted, resetSubmission, resetDeletion }: Props) => { 
   const { execute, data, error, isLoading } = useComments(noteId, undefined, undefined, 'get', 'list');
   const token = localStorage.getItem('authTokens');
   const userId = token ? jwtDecode(token).user_id : null;
+  const { toast } = useToast();
 
   const deleteComment = useCallback(async (commentId: number) => {
     console.log("Attempting to delete comment with ID:", commentId);
@@ -30,17 +38,25 @@ const CommentsList = ({ noteId }: Props) => {
       const response = await fetch(`${baseURL}/interactions/comments/${commentId}/`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authTokens')}`,
+          'Authorization': `Bearer ${JSON.parse(token).access}`,
           'Content-Type': 'application/json',
         },
       });
       
       if (!response.ok) {
         throw new Error('Failed to delete comment');
+        toast({variant: "destructive", description: "Your comment cannot be deleted at the moment!"});
       }
 
+      isDeleted(true);
       // Refresh the comments list after deletion
       execute();
+
+      setTimeout(() => {
+      resetDeletion();
+    }, 100); // Adjust the delay if necessary
+      
+      toast({variant: "success", description: "Your comment has been deleted successfully!"});
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
@@ -49,14 +65,16 @@ const CommentsList = ({ noteId }: Props) => {
 
   useEffect(() => {
     execute(); // Trigger fetching the comment list
+    resetSubmission();
     console.log(data['comments'])
-  }, []); // need to add depency execute in prod server
+  }, [isSubmitted]);
+
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading note: {error.message}</p>;
 
   // Check if data is defined and not an array
-  if (!data.comments || !Array.isArray(data.comments)) return <p>Be the first to comment on this note!</p>;
+  if (!data.comments || !Array.isArray(data.comments)) return <p className=' text-sm text-gray-700'>Be the first to comment on this note!</p>;
 
   const showButton = (comment_owner, element) => {
     if (comment_owner === userId)
@@ -96,6 +114,7 @@ const CommentsList = ({ noteId }: Props) => {
               <CardFooter className="grid flex-1 gap-0 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-6 xl:grid-cols-6 mb-1">
               </CardFooter>
             </Card>
+            <Toaster />
           </div>
         )}
       </div>

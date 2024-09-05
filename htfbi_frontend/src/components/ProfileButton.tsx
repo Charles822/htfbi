@@ -1,4 +1,5 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import AuthContext from "../context/AuthContext";
 import { User }from "lucide-react"
 import {
@@ -15,6 +16,19 @@ import { Button } from "@/components/ui/button"
 
 const ProfileButton = () => {
   const { logoutUser } = useContext(AuthContext);
+
+  const handleClick = async () => {
+    try {
+      await logoutUser(); // If logoutUser returns a promise
+      console.log('your are loggout')
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+    
+
 	
   return (
 		<DropdownMenu>
@@ -33,7 +47,7 @@ const ProfileButton = () => {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => logoutUser()}>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleClick}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 	)
