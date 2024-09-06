@@ -13,7 +13,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 
 # Set up Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'htfbi_backend.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'htfbi_backend.settings.dev')
 django.setup()
 
 from contents.models import Transcript
