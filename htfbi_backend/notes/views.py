@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
@@ -26,13 +27,15 @@ class NoteViewSet(ModelViewSet):
 
     def get_queryset(self):
         list_id = self.kwargs.get('list_pk')
+        queryset = Note.objects.annotate(
+            votes_count=Sum('votes__vote')
+        ).order_by('-votes_count', '-created_at')
+        
         if list_id is not None:
-            return Note.objects.filter(note_list=list_id)
-        return Note.objects.all()
+            return queryset.filter(note_list=list_id)
+        return queryset.all()
 
-                # queryset = Note.objects.annotate(
-        #     votes_count=Sum('votes__vote')
-        # ).order_by('-votes_count', '-created_at')
+
 
     @action(detail=False, methods=['post'], url_path='add_note')
     def add_note(self, request, *args, **kwargs):
