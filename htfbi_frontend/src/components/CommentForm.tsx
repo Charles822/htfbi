@@ -88,7 +88,7 @@ function CommentForm({ noteId, isSubmitted }: Props) {
 
   return (
   	<>
-	  	<div>
+	  	<div className=''>
 		    <Form {...form} >
 		      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 		        <FormField

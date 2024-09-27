@@ -28,6 +28,12 @@ const CommentsPreview = ({ noteId, updateAfterDelete, updateAfterPost }: Props) 
       fetchCommentCount();
   }, [fetchCommentCount]);
 
+  useEffect(() => {
+  	if (updateAfterDelete || updateAfterPost) {
+  		fetchCommentCount();
+  	}
+  }, [updateAfterDelete, updateAfterPost]);
+
 
 	useEffect(() => {
 		if (data && data.comments_count) {

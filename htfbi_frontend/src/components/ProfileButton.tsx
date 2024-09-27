@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button"
 
 const ProfileButton = () => {
   const { logoutUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleClick = async () => {
     try {
