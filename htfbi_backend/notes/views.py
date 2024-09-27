@@ -9,6 +9,7 @@ from .models import Note
 from .serializers import NoteSerializer, NoteCreationSerializer
 from htfbi_backend.tasks import create_note_task 
 from core.permissions import AdminOnly
+from celery.result import AsyncResult
 
 def get_permissions_based_on_action(action):
     # No permission required for retrieving a resource
@@ -41,9 +42,24 @@ class NoteViewSet(ModelViewSet):
     def add_note(self, request, *args, **kwargs):
         note_data = request.data
         task_result = create_note_task.delay(note_data)
+        print('taskId=', task_result.id)
         
         # Respond immediately that the task is in progress
-        return Response({"message": "Note creation is in progress."}, status=status.HTTP_202_ACCEPTED)
+        return Response({
+            "message": "Note creation is in progress.",
+            "taskId": task_result.id
+            }, status=status.HTTP_202_ACCEPTED)
+
+
+    @action(detail=False, methods=['get'], url_path='check_task_status/(?P<task_id>[^/.]+)')
+    def check_task_status(self, request, task_id=None):
+        task_result = AsyncResult(task_id)
+        if task_result.successful():
+            return Response({'status': 'SUCCESS', 'note_id': task_result.result['note_id']})
+        elif task_result.failed():
+            return Response({'status': 'FAILURE'})
+        else:
+            return Response({'status': 'PENDING'})
 
     # @action(detail=False, methods=['post'], url_path='add_note')
     # def add_note(self, request, *args, **kwargs):
