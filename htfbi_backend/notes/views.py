@@ -7,6 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from django.conf import settings
 from .models import Note
 from .serializers import NoteSerializer, NoteCreationSerializer
+from htfbi_backend.tasks import create_note_task 
 from core.permissions import AdminOnly
 
 def get_permissions_based_on_action(action):
@@ -36,14 +37,21 @@ class NoteViewSet(ModelViewSet):
         return queryset.all()
 
 
-
     @action(detail=False, methods=['post'], url_path='add_note')
     def add_note(self, request, *args, **kwargs):
-        serializer = NoteCreationSerializer(data=request.data)
+        note_data = request.data
+        task_result = create_note_task.delay(note_data)
         
-        if serializer.is_valid():
-            note_instance = serializer.save()
-            response_serializer = NoteSerializer(note_instance)
-            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        # Respond immediately that the task is in progress
+        return Response({"message": "Note creation is in progress."}, status=status.HTTP_202_ACCEPTED)
+
+    # @action(detail=False, methods=['post'], url_path='add_note')
+    # def add_note(self, request, *args, **kwargs):
+    #     serializer = NoteCreationSerializer(data=request.data)
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #     if serializer.is_valid():
+    #         note_instance = serializer.save()
+    #         response_serializer = NoteSerializer(note_instance)
+    #         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

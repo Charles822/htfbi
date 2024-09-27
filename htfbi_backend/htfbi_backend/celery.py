@@ -4,7 +4,7 @@ from celery import Celery
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'htfbi_backend.settings.dev')
 
-app = Celery('htfbi')
+app = Celery('htfbi_backend')
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
