@@ -69,7 +69,7 @@ const NoteDetailsCard = () => {
           <CommentsPreview noteId={note.id} updateAfterDelete={isDeleted} updateAfterPost={isSubmitted} ></CommentsPreview>
         </CardFooter>
       </Card>
-      <div className="grid flex-1 items-start justify-between gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-2 xl:grid-cols-2" >
+      <div className="items-start md:w-1/2" >
         <CommentForm isSubmitted={status => setStatus(status)} noteId={note.id} />
       </div>
       <div className="grid flex-1 gap-4 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-3 xl:grid-cols-3" >

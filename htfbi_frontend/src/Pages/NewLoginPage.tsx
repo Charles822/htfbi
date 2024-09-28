@@ -37,7 +37,7 @@ export function LoginForm() {
   return (
     <>
       <Logo />
-      <div className="grid flex-1 gap-4 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-2 xl:grid-cols-2" >
+      <div className="grid gap-4 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-2 xl:grid-cols-2" >
         <h1 className="text-4xl font-semibold my-auto mx-10 px-20">Welcome back to <a className="underline decoration-rose-700"> Noteless</a>!</h1>
         <Card className="mx-auto my-10 max-w-sm hover:bg-white shadow outline outline-gray-100">
           <CardHeader>

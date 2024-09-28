@@ -17,7 +17,9 @@ const Header = () => {
 			{user ? (
 				<ProfileButton />
 			) : (
-				<Button>{<Link to="/login/new">Login</Link>}</Button>
+				<Link to="/login/new">
+					<Button>Login</Button>
+				</Link>
 			)}
 		</header>
 	);

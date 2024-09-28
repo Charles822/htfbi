@@ -15,12 +15,9 @@ import useLists from "../hooks/useLists"
 import NotePreviewList from  "./NotePreviewList"
 import NoteForm from './NoteForm'
 
-
-
 const ListDetails = () => {
   const params = useParams<{listId: number}>();
   const [listId, setListId] = useState(params.listId);
-  // const [isSubmitted, setStatus] = useState(false);
   const [isCreated, setIsCreated] = useState(false);
   const { execute, data, error, isLoading } = useLists(listId);
   console.log(data);
@@ -31,7 +28,6 @@ const ListDetails = () => {
 
   useEffect(() => {
     execute(); // Trigger fetching the list
-    // setStatus(false);
   }, []); // need to add depency execute in prod server
 
   if (isLoading) return <p>Loading...</p>;

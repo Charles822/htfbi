@@ -84,8 +84,8 @@ import {
 function Sidenav() {
 
   return (
-    <aside className="fixed top-14 w-14 h-[calc(100vh-3.5rem)] inset-y-0 left-0 z-0 hidden w-14 flex-col border-r bg-background sm:flex">
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+    <aside className="fixed justify-between top-14 w-14 h-auto inset-y-0 left-0 z-0 flex-col border-r bg-background flex">
+      <nav className="flex flex-col items-center gap-4 px-2 py-5">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -123,7 +123,7 @@ function Sidenav() {
           </Tooltip>
         </TooltipProvider>
       </nav>
-      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>

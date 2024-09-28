@@ -19,21 +19,19 @@ import { UrlLink } from '../utils/Formatting';
 
 interface Props {
   listId: number;
-  isCreated: boolean;
-  reset: () => void;
+  isCreated: boolean; // to notify this component to refresh upon creation of a new note
+  reset: () => void; // notify ListDetails that this component has been refresh and reset the value
 }
 
 const NotePreviewList = ({ listId, isCreated, reset }: Props) => {
   const { execute, data, error, isLoading } = useNotes(listId);
   const token = localStorage.getItem('authTokens');
   const userId = token ? jwtDecode(token).user_id : null;
-  // const [updated, setUpdated] = useState(isCreated)
   console.log(data);
-
 
   useEffect(() => {
     execute(); // Trigger fetching the comment list
-    reset();
+    reset(); 
   }, [isCreated]); // need to add depency execute in prod server
 
   if (isLoading) return <p>Loading...</p>;
@@ -60,7 +58,7 @@ const NotePreviewList = ({ listId, isCreated, reset }: Props) => {
                 <Link to={`/note/${note.id}`}>
                   <CardHeader>
                     <CardTitle className="my-2 text-md">{note.video.title}</CardTitle>
-                    <CardDescription className="grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between">
+                    <CardDescription className="grid gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between">
                       <ul>
                         <li>Channel: {note.video.channel_name}</li>
                         <li>

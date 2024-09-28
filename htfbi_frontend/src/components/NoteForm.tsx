@@ -31,7 +31,6 @@ type FormData = z.infer<typeof formSchema>;
 
 interface Props {
 	listId: number;
-	// isSubmitted: (status: boolean) => void;
   onNoteCreated: () => void;
 }
 
@@ -73,8 +72,7 @@ function NoteForm({ listId, onNoteCreated }: Props) {
         toast({ variant: "success", description: "Your note is ready!" });
         // Remove completed task ID from the array
         setTaskIds(prevTaskIds => prevTaskIds.filter(id => id !== taskId));
-        // isSubmitted(true);
-        onNoteCreated(); // Notify parent
+        onNoteCreated(); // Notify parent - ListDetail
       }
     }
     if (taskIds.length === 0) {
@@ -82,23 +80,6 @@ function NoteForm({ listId, onNoteCreated }: Props) {
     }
   }
 }, delay);
-
-  // useInterval(async () => {
-  //   if (taskId) {
-  //     console.log('yes, there is a taskId:', taskId);
-  //     let response = await fetch(`http://127.0.0.1:8000/notes/notes/check_task_status/${taskId}/`, {
-  //       method: 'GET',
-  //     })
-  //     let data = await response.json();
-  //     console.log(data);
-  //     if (data.status === 'SUCCESS') {
-  //       toast({ variant: "success", description: "Your note is ready!" });
-  //       setDelay(null); // Stop polling
-  //       isSubmitted(true);
-  //     }
-  //   }
-  // }, delay); 
-
 
   // Define a submit handler.
   const onSubmit = async (values: FormData) => {
@@ -113,14 +94,10 @@ function NoteForm({ listId, onNoteCreated }: Props) {
       // Call the API to create a note
       const response = await execute(note_data);
       console.log(response)
-
-      // Assume the response includes a task ID
-      // setTaskId(response.taskId);
       setTaskIds(prevTaskIds => [...prevTaskIds, response.taskId])
       
       toast({ variant: "loading", description: "Your note is processing!" });
       reset();
-      // isSubmitted(true);
 
     } catch (err) {
       console.error('Error creating note:', err.message);
