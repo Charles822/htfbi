@@ -33,7 +33,7 @@ const useNotes = (listId?: number, noteId?: number, method: 'get' | 'post' | 'pa
 	const endpoint = method === 'post'
 	? `/notes/notes/add_note/`
 	: noteId 
-		? `/notes/notes/${noteId}/` 
+		? `/notes/notes/${noteId}/`
 		: `/lists/lists/${listId}/notes/`;
 	
 	return useData<Note | Note[]>(endpoint, method, requestData);

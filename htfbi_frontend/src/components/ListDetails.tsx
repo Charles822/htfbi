@@ -16,17 +16,23 @@ import NotePreviewList from  "./NotePreviewList"
 import NoteForm from './NoteForm'
 
 
+
 const ListDetails = () => {
   const params = useParams<{listId: number}>();
   const [listId, setListId] = useState(params.listId);
-  const [isSubmitted, setStatus] = useState(false);
+  // const [isSubmitted, setStatus] = useState(false);
+  const [isCreated, setIsCreated] = useState(false);
   const { execute, data, error, isLoading } = useLists(listId);
   console.log(data);
 
+  const handleNoteCreated = () => {
+   setIsCreated(true); // to notify the NotepreviewList component;
+  };
+
   useEffect(() => {
     execute(); // Trigger fetching the list
-    setStatus(false);
-  }, [isSubmitted]); // need to add depency execute in prod server
+    // setStatus(false);
+  }, []); // need to add depency execute in prod server
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading lists: {error.message}</p>;
@@ -54,8 +60,8 @@ const ListDetails = () => {
         </div>
       </div>
       <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-4 xl:grid-cols-4">
-        <NoteForm isSubmitted={status => setStatus(status)} listId={listId} className="col-span-1" />
-        <NotePreviewList listId={listId} />
+        <NoteForm onNoteCreated={handleNoteCreated} listId={listId} className="col-span-1" />
+        <NotePreviewList listId={listId} isCreated={isCreated} reset={() => setIsCreated(false)}/>
       </div>
     </>
   )

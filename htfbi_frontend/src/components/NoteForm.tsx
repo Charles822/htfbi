@@ -19,7 +19,9 @@ import { z } from "zod"
 import { useToast } from "@/components/ui/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { LoaderCircle } from "lucide-react"
-
+import { useInterval } from "../hooks/useInterval"
+import { useState } from 'react';
+ 
 
 const formSchema = z.object({
   youtube_url: z.string().url(),
@@ -29,11 +31,16 @@ type FormData = z.infer<typeof formSchema>;
 
 interface Props {
 	listId: number;
-	isSubmitted: (status: boolean) => void;
+	// isSubmitted: (status: boolean) => void;
+  onNoteCreated: () => void;
 }
 
 
-function NoteForm({ listId, isSubmitted }: Props) {
+function NoteForm({ listId, onNoteCreated }: Props) {
+  const [delay, setDelay] = useState(5000);
+  // const [taskId, setTaskId] = useState<string | null>(null);
+  const [taskIds, setTaskIds] = useState([]);
+
   // 1. Define your form.
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -49,11 +56,51 @@ function NoteForm({ listId, isSubmitted }: Props) {
   const { toast } = useToast();
 
 
-  // Call useNotes at the top level
+  // Notes hook
   const { execute, data, error, isLoading } = useNotes(undefined, undefined, 'post');
 
+  // Polling logic
+  useInterval(async () => {
+  if (taskIds.length > 0) {
+    for (const taskId of taskIds) {
+      console.log('Checking taskId:', taskId);
+      const response = await fetch(`http://127.0.0.1:8000/notes/notes/check_task_status/${taskId}/`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+      console.log(data);
+      if (data.status === 'SUCCESS') {
+        toast({ variant: "success", description: "Your note is ready!" });
+        // Remove completed task ID from the array
+        setTaskIds(prevTaskIds => prevTaskIds.filter(id => id !== taskId));
+        // isSubmitted(true);
+        onNoteCreated(); // Notify parent
+      }
+    }
+    if (taskIds.length === 0) {
+      setDelay(null); // Stop polling if no tasks left
+    }
+  }
+}, delay);
 
-  // 2. Define a submit handler.
+  // useInterval(async () => {
+  //   if (taskId) {
+  //     console.log('yes, there is a taskId:', taskId);
+  //     let response = await fetch(`http://127.0.0.1:8000/notes/notes/check_task_status/${taskId}/`, {
+  //       method: 'GET',
+  //     })
+  //     let data = await response.json();
+  //     console.log(data);
+  //     if (data.status === 'SUCCESS') {
+  //       toast({ variant: "success", description: "Your note is ready!" });
+  //       setDelay(null); // Stop polling
+  //       isSubmitted(true);
+  //     }
+  //   }
+  // }, delay); 
+
+
+  // Define a submit handler.
   const onSubmit = async (values: FormData) => {
     try {
       const owner = jwtDecode(localStorage.getItem('authTokens')).user_id;
@@ -63,12 +110,17 @@ function NoteForm({ listId, isSubmitted }: Props) {
         owner
       };
     
-      // Call the API request here
-      await execute(note_data);
+      // Call the API to create a note
+      const response = await execute(note_data);
+      console.log(response)
 
-      toast({ variant: "success", description: "Your note has been created successfully!" });
+      // Assume the response includes a task ID
+      // setTaskId(response.taskId);
+      setTaskIds(prevTaskIds => [...prevTaskIds, response.taskId])
+      
+      toast({ variant: "loading", description: "Your note is processing!" });
       reset();
-      isSubmitted(true);
+      // isSubmitted(true);
 
     } catch (err) {
       console.error('Error creating note:', err.message);

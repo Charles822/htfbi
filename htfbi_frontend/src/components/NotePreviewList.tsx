@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Separator } from "@/components/ui/separator";
 import Vote from './Vote';
 import CommentsPreview from './CommentsPreview';
@@ -19,17 +19,22 @@ import { UrlLink } from '../utils/Formatting';
 
 interface Props {
   listId: number;
+  isCreated: boolean;
+  reset: () => void;
 }
 
-const NotePreviewList = ({ listId }: Props) => {
+const NotePreviewList = ({ listId, isCreated, reset }: Props) => {
   const { execute, data, error, isLoading } = useNotes(listId);
   const token = localStorage.getItem('authTokens');
   const userId = token ? jwtDecode(token).user_id : null;
+  // const [updated, setUpdated] = useState(isCreated)
   console.log(data);
 
+
   useEffect(() => {
-    execute(); // Trigger fetching the list
-  }, []); // need to add depency execute in prod server
+    execute(); // Trigger fetching the comment list
+    reset();
+  }, [isCreated]); // need to add depency execute in prod server
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading note: {error.message}</p>;
