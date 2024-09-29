@@ -10,7 +10,7 @@ class List(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField(max_length=60, blank=True)
+    slug = models.SlugField(max_length=60, unique=True, blank=True)
     meta_description = models.TextField(max_length=160, blank=True)
 
     def __str__(self):

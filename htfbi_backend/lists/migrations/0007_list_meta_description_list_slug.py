@@ -12,6 +12,11 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='list',
+            name='meta_description',
+            field=models.SlugField(blank=True, max_length=150), # also added the meta_description field
+        ),
+        migrations.AddField(
+            model_name='list',
             name='slug',
             field=models.SlugField(blank=True, max_length=60), # also added the meta_description field
         ),

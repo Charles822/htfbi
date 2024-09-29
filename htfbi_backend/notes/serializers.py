@@ -155,7 +155,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Note
-        fields = ['id', 'video', 'response', 'note_list', 'owner', 'comments_count', 'votes_count', 'created_at']
+        fields = ['id', 'video', 'response', 'note_list', 'owner', 'comments_count', 'votes_count', 'created_at', 'slug', 'meta_description']
 
 
     def get_comments_count(self, note: Note):
