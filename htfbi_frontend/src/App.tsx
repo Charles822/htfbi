@@ -33,7 +33,7 @@ const router = createBrowserRouter([
         errorElement: <NotFoundPage />,
         children: [
           { path: '/', element: <ListGrid />, },
-          { path: '/list/:listId', element: <ListDetails />, },
+          { path: '/list/:slug', element: <ListDetails />, },
           { path: '/note/:noteId', element: <NoteDetailsCard />, },
           { path: '/create-a-new-list', element: <ListForm />, },
           // Add more routes here

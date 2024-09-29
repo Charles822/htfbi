@@ -37,7 +37,7 @@ const ListGrid = () => {
         {data && data.map((list) => 
           <div key={list.id} className="grid w-5/6 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-2 lg:grid-cols-1 xl:grid-cols-1 mb-2">
             <Separator className='gap-0'/>
-            <Link to={`/list/${list.id}`}>
+            <Link to={`/list/${list.slug}`}>
               <Card>
                 <CardHeader>
                   <CardTitle className="my-2 text-md">{list.name}</CardTitle>

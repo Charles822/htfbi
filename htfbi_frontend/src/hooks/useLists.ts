@@ -19,14 +19,16 @@ export interface List {
 	owner: User;
 	updated_at: string;
 	created_at: string;
+  slug: string;
+  meta_description: string;
 }
 
 
-const useLists = (listId?: number, method: 'get' | 'post' | 'patch' = 'get', requestData?: { name: string; description: string; agent_role_description: string; owner: number }) => {
+const useLists = (slug?: number, method: 'get' | 'post' | 'patch' = 'get', requestData?: { name: string; description: string; agent_role_description: string; owner: number }) => {
   const endpoint = method === 'post'
     ? '/lists/lists/add_list/' // Use a different endpoint for POST
-    : listId 
-      ? `/lists/lists/${listId}/`
+    : slug 
+      ? `/lists/lists/${slug}/`
       : `/lists/lists/`;
 
   return useData<List | List[]>(endpoint, method, requestData);

@@ -18,13 +18,13 @@ import  { jwtDecode } from 'jwt-decode';
 import { UrlLink } from '../utils/Formatting';
 
 interface Props {
-  listId: number;
+  listSlug: number;
   isCreated: boolean; // to notify this component to refresh upon creation of a new note
   reset: () => void; // notify ListDetails that this component has been refresh and reset the value
 }
 
-const NotePreviewList = ({ listId, isCreated, reset }: Props) => {
-  const { execute, data, error, isLoading } = useNotes(listId);
+const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
+  const { execute, data, error, isLoading } = useNotes(listSlug);
   const token = localStorage.getItem('authTokens');
   const userId = token ? jwtDecode(token).user_id : null;
   console.log(data);

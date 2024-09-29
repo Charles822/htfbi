@@ -40,7 +40,7 @@ class ListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = List
-        fields = ['id', 'name', 'description', 'agent_role', 'is_closed', 'owner', 'updated_at']
+        fields = ['id', 'name', 'description', 'agent_role', 'is_closed', 'owner', 'updated_at', 'slug', 'meta_description']
 
     # Provide a more simple date information for the front end
     def get_formatted_date(self, list: List):

@@ -29,12 +29,12 @@ export interface Note {
 	created_at: string;
 }
 
-const useNotes = (listId?: number, noteId?: number, method: 'get' | 'post' | 'patch' = 'get', requestData?: { youtube_url: string; note_list: number; owner: number }) => {
+const useNotes = (slug?: number, noteId?: number, method: 'get' | 'post' | 'patch' = 'get', requestData?: { youtube_url: string; note_list: number; owner: number }) => {
 	const endpoint = method === 'post'
 	? `/notes/notes/add_note/`
 	: noteId 
 		? `/notes/notes/${noteId}/`
-		: `/lists/lists/${listId}/notes/`;
+		: `/lists/lists/${slug}/notes/`;
 	
 	return useData<Note | Note[]>(endpoint, method, requestData);
 	}

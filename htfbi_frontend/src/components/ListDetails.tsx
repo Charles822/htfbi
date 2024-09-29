@@ -16,10 +16,10 @@ import NotePreviewList from  "./NotePreviewList"
 import NoteForm from './NoteForm'
 
 const ListDetails = () => {
-  const params = useParams<{listId: number}>();
-  const [listId, setListId] = useState(params.listId);
+  const params = useParams<{slug: string}>();
+  const [slug, setSlug] = useState(params.slug);
   const [isCreated, setIsCreated] = useState(false);
-  const { execute, data, error, isLoading } = useLists(listId);
+  const { execute, data, error, isLoading } = useLists(slug);
   console.log(data);
 
   const handleNoteCreated = () => {
@@ -56,8 +56,8 @@ const ListDetails = () => {
         </div>
       </div>
       <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-4 xl:grid-cols-4">
-        <NoteForm onNoteCreated={handleNoteCreated} listId={listId} className="col-span-1" />
-        <NotePreviewList listId={listId} isCreated={isCreated} reset={() => setIsCreated(false)}/>
+        <NoteForm onNoteCreated={handleNoteCreated} listId={data.id} className="col-span-1" />
+        <NotePreviewList listSlug={data.slug} isCreated={isCreated} reset={() => setIsCreated(false)}/>
       </div>
     </>
   )
