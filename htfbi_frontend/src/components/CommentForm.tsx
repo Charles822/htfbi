@@ -44,7 +44,7 @@ function CommentForm({ noteId, isSubmitted }: Props) {
   const { errors, isSubmitting, isDirty, isValid } = formState;
   const { toast } = useToast();
 
-  // Call useLists at the top level
+  // Call useLists at the top level, cannot directly use it inside onSubmit
   const { execute, data, error, isLoading } = useComments(undefined, undefined, undefined, 'post', undefined);
 
   // 2. Define a submit handler.
@@ -67,6 +67,10 @@ function CommentForm({ noteId, isSubmitted }: Props) {
     await execute(comment_data);
 
     if (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Failed to create a comment');
+      }
+      toast({variant: "destructive", description: "Your comment cannot be created at the moment!"});
     } else {
       toast({variant: "success", description: "Your comment has been created successfully!"});
       reset();

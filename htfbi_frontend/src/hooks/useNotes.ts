@@ -13,7 +13,6 @@ export interface Response {
   agent_response: string;
 }
 
-
 export interface User {
 	username: string;
 }

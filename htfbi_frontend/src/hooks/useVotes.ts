@@ -1,6 +1,5 @@
 import useData from "./useData.ts";
 
-
 export interface Vote {
 	id: number;
 	note: number;

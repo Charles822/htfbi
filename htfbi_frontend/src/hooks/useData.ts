@@ -1,6 +1,5 @@
-import axios, { CanceledError, AxiosRequestConfig, AxiosError } from "axios";
 import { useState, useEffect } from "react";
-// import apiClient from '../services/api-client';
+import axios, { CanceledError, AxiosRequestConfig, AxiosError } from "axios";
 import { axiosInstance } from '../services/api-client';
 
 const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch' | 'delete', requestData?: any, requestConfig?: AxiosRequestConfig, deps?: any[]) => {
@@ -17,7 +16,6 @@ const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch' | 'delete
         data: requestData,
         ...requestConfig
       });
-      console.log('Response data:', response.data);
       setData(response.data);
       return response.data; // Return data on success
     } catch (err) {

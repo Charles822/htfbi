@@ -1,8 +1,8 @@
-import {ArrowBigUp, ArrowBigDown}from "lucide-react"
-import useVotes from '../hooks/useVotes'
 import { ReactNode, useState, useCallback, useEffect } from "react"
+import {ArrowBigUp, ArrowBigDown}from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { Toaster } from "@/components/ui/toaster"
+import useVotes from '../hooks/useVotes'
 
 interface Props {
 	noteId: number;
@@ -20,14 +20,14 @@ const Vote = ({ noteId, userId, voteId }: Props) => {
 	const [voteSum, setVoteSum] = useState<number>(0);
 	const { toast } = useToast();
 
-	console.log(voteStatus)
-	
 	// Fetch initial vote datas 
 	const fetchData = useCallback(async () => {
 	    try {
 	      await execute();
 	    } catch (error) {
-	      console.error('Error fetching vote:', error);
+	    	if (process.env.NODE_ENV === 'development') {
+	      	console.error('Error fetching vote:', error);
+	  		}
 	      setVoteStatus(null); // or any default value
 	    }
 	}, [voteStatus]);
@@ -47,13 +47,14 @@ const Vote = ({ noteId, userId, voteId }: Props) => {
 
 
 	// Load initial & updated votes count
-
 	useEffect(() => {
 	  const fetchVoteSum = async () => {
 	    try {
 	      await execute_votes_sum();
 	    } catch (votes_sum_error) {
-	      console.error('Error fetching votes sum:', votes_sum_error);
+	    	if (process.env.NODE_ENV === 'development') {
+	      	console.error('Error fetching votes sum:', votes_sum_error);
+	  		}
 	    }
 	  };
 
@@ -69,6 +70,7 @@ const Vote = ({ noteId, userId, voteId }: Props) => {
 	  }
   }, [votes_sum]); // need to add dependency execute in prod server
 
+	// prompt a user to login when clicking on a vote button while being logged out
 	function check_login_status() {
     	const token = localStorage.getItem('authTokens');
 
@@ -100,13 +102,15 @@ const Vote = ({ noteId, userId, voteId }: Props) => {
 	    try {
 	      await execute_patch(vote_data);
 	    } catch (error) {
-	      console.error("Error updating vote:", error);
+	    	if (process.env.NODE_ENV === 'development') {
+	      		console.error("Error updating vote:", error);
+	  		}
 	      setVoteStatus(previousVoteStatus); // Revert if there's an error
 	      setVoteSum(previousVoteSum); // Optionally, revert optimistic update
 	    }
   	};
 
-
+  	// logic when a user press a vote button on a note for the first time
     const createVote = async (vote_value: number) => {
 	    const previousVoteStatus = voteStatus;
 	    const previousVoteSum = voteSum;
@@ -126,12 +130,13 @@ const Vote = ({ noteId, userId, voteId }: Props) => {
 	      if (new_vote_data)
 	      	data = new_vote_data;
 	    } catch (error) {
-	      console.error("Error updating vote:", error);
+	    	if (process.env.NODE_ENV === 'development') {
+	      	console.error("Error updating vote:", error);
+	  		}
 	      setVoteStatus(previousVoteStatus); // Revert if there's an error
 	      setVoteSum(previousVoteSum); // Optionally, revert optimistic update
 	    }
   	};
-
 
 	const upColor = voteStatus === 1 ? 'text-rose-500 fill-rose-500' : 'text-gray-500';
   	const downColor = voteStatus === -1 ? 'text-rose-500 fill-rose-500' : 'text-gray-500';
@@ -164,4 +169,4 @@ const Vote = ({ noteId, userId, voteId }: Props) => {
 	)
 }
 
-export default Vote
+export default Vote;

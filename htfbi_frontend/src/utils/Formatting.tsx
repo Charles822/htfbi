@@ -1,7 +1,6 @@
   // Create a link for youtube urls
   
   export const UrlLink = ({ url }) => {
-    console.log(url)
     return (
       <a href={url} target="_blank" rel="noopener noreferrer" className='underline decoration-rose-700 text-rose-700'>
         Video Link

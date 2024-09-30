@@ -1,6 +1,7 @@
+import { useState, useEffect } from "react"
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-
+import  { jwtDecode } from 'jwt-decode';
 import {
   Card,
   CardContent,
@@ -9,16 +10,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-
-import { useState, useEffect } from "react"
-import { Separator } from "@/components/ui/separator"
-import  { jwtDecode } from 'jwt-decode';
+import { Separator } from "@/components/ui/separator";
 import useNotes from "../hooks/useNotes";
+import { UrlLink, TextWithLineBreaks } from '../utils/Formatting';
 import Vote from './Vote';
 import CommentsPreview from './CommentsPreview';
 import CommentsList from './CommentsList';
 import CommentForm from './CommentForm';
-import { UrlLink, TextWithLineBreaks } from '../utils/Formatting';
+
 
 
 const NoteDetailsCard = () => {

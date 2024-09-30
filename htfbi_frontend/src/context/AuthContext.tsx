@@ -1,7 +1,6 @@
 import { createContext, useState, useEffect } from 'react'
-import  { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom'
-
+import  { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext()
 
@@ -51,7 +50,9 @@ export const AuthProvider = ({children}) => {
 
     const updateToken = async () => {
         if (!authTokens?.refresh) {
-            console.error('No refresh token available');
+            if (process.env.NODE_ENV === 'development') {
+                console.error('No refresh token available');
+            }
             return;
         }
 
@@ -69,7 +70,9 @@ export const AuthProvider = ({children}) => {
             setUser(jwtDecode(data.access))
             localStorage.setItem('authTokens',JSON.stringify(data))
         } else {
-            console.error('Failed to refresh token:', data);
+            if (process.env.NODE_ENV === 'development') {
+                console.error('Failed to refresh token:', data);
+            }
             logoutUser()
         }
 

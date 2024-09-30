@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
-import BreadCrumbHeader from "./BreadCrumbHeader";
-import { Button } from "@/components/ui/button";
-import SearchHeader from "./SearchHeader";
-import ProfileButton from "./ProfileButton";
-import AuthContext from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
+import { Button } from "@/components/ui/button";
 import Logo from '../components/Logo';
+import ProfileButton from "./ProfileButton";
+import SearchHeader from "./SearchHeader";
 
 const Header = () => {
 	const { user } = useContext(AuthContext);
@@ -17,7 +16,7 @@ const Header = () => {
 			{user ? (
 				<ProfileButton />
 			) : (
-				<Link to="/login/new">
+				<Link to="/login">
 					<Button>Login</Button>
 				</Link>
 			)}

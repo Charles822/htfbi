@@ -1,5 +1,7 @@
-import { Button } from "@/components/ui/button"
+import { useState, useCallback, useEffect } from "react"
 import { X }from "lucide-react"
+import  { jwtDecode } from 'jwt-decode';
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -8,14 +10,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-
-import { useState, useCallback, useEffect } from "react"
 import { Separator } from "@/components/ui/separator";
-import useComments from "../hooks/useComments"; 
-import { baseURL } from "../services/api-client";
-import  { jwtDecode } from 'jwt-decode';
-import { useToast } from "@/components/ui/use-toast"
 import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/components/ui/use-toast"
+import { baseURL } from "../services/api-client";
+import useComments from "../hooks/useComments"; 
 
 interface Props {
   noteId: number;
@@ -33,7 +32,6 @@ const CommentsList = ({ noteId, isDeleted, isSubmitted, resetSubmission, resetDe
   const { toast } = useToast();
 
   const deleteComment = useCallback(async (commentId: number) => {
-    console.log("Attempting to delete comment with ID:", commentId);
     try {
       const response = await fetch(`${baseURL}/interactions/comments/${commentId}/`, {
         method: 'DELETE',
@@ -58,17 +56,17 @@ const CommentsList = ({ noteId, isDeleted, isSubmitted, resetSubmission, resetDe
       
       toast({variant: "success", description: "Your comment has been deleted successfully!"});
     } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
       console.error('Error deleting comment:', error);
+      }
+      toast({ variant: 'destructive', description: 'An unexpected error occurred. Please try again later.' });
     }
   }, []);
-
 
   useEffect(() => {
     execute(); // Trigger fetching the comment list
     resetSubmission();
-    console.log(data['comments'])
   }, [isSubmitted]);
-
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading note: {error.message}</p>;
@@ -76,12 +74,12 @@ const CommentsList = ({ noteId, isDeleted, isSubmitted, resetSubmission, resetDe
   // Check if data is defined and not an array
   if (!data.comments || !Array.isArray(data.comments)) return <p className=' text-sm text-gray-700'>Be the first to comment on this note!</p>;
 
+  // a delete button showed only to the comment owner
   const showButton = (comment_owner, element) => {
     if (comment_owner === userId)
       return element
   };
 
-  
   return (
     <>
       <div >
@@ -100,7 +98,6 @@ const CommentsList = ({ noteId, isDeleted, isSubmitted, resetSubmission, resetDe
                     size="icon" 
                     className="p-01 w-4 h-4"
                     onClick={() => {
-                    console.log("Delete button clicked, comment ID:", comment.id);
                     deleteComment(comment.id);
                   }} >
                     < X className="h-4 w-4" />

@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import AuthContext from "../context/AuthContext";
 import { User }from "lucide-react"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,7 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
 
 
 const ProfileButton = () => {
@@ -21,15 +21,13 @@ const ProfileButton = () => {
   const handleClick = async () => {
     try {
       await logoutUser(); // If logoutUser returns a promise
-      console.log('your are loggout')
       navigate('/', { replace: true });
     } catch (error) {
-      console.error('Logout failed:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Logout failed:', error);
+      }
     }
   };
-
-    
-
 	
   return (
 		<DropdownMenu>
@@ -54,4 +52,4 @@ const ProfileButton = () => {
 	)
 }
 
-export default ProfileButton
+export default ProfileButton;

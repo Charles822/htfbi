@@ -1,11 +1,6 @@
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Link } from 'react-router-dom';
 import React, {useContext, useState} from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import { Navigate } from 'react-router-dom';
-
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -23,13 +18,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
+import { useForm } from "react-hook-form";
+import useUsers from '../hooks/useUsers';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import Header from '../components/Header'
 import Logo from '../components/Logo';
-import useUsers from '../hooks/useUsers';
-import { useToast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/toaster"
 
 const registerUserSchema = z.object({
   email: z.string().email({
@@ -43,7 +41,6 @@ const registerUserSchema = z.object({
   }),
   confirmPassword: z.string(),
 })
-
 
 // Validate strong password format
 const refinedRegisterUserSchema = 
@@ -113,10 +110,9 @@ const finalRegisterUserSchema =
     path: ["confirmPassword"],
   });
 
-  
 type FormData = z.infer<typeof finalRegisterUserSchema>;
 
-export default function SignUpForm() {
+export default function SignUpPage() {
   // 1. Define your form.
   const form = useForm<FormData>({
     resolver: zodResolver(finalRegisterUserSchema),
@@ -133,10 +129,8 @@ export default function SignUpForm() {
   const { errors, isSubmitting, isDirty, isValid } = formState;
   const { toast } = useToast();
 
-
   // Call useLists at the top level
   const { execute, data, error, isLoading } = useUsers('post');
-
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {
@@ -150,9 +144,11 @@ export default function SignUpForm() {
     await execute(user_data);
 
     if (error) {
-      console.error('Error creating new user:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error creating new user:', error);
+      }
+      toast({variant: "destructive", description: "Your account has note been created, please try again!"});
     } else {
-      console.log('New user created successfully:', data);
       toast({variant: "success", description: "Your account has been created successfully!"});
       reset();
       setRedirect(true);
@@ -169,10 +165,10 @@ export default function SignUpForm() {
       <Logo />
       <div className="grid flex-1 gap-4 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-2 xl:grid-cols-2" >
         <div className='my-40 mx-10'>
-          <h1 className="text-4xl font-semibold mb-2">Why do the <a className="underline decoration-rose-700">best ideas </a>come to those who don't need them? </h1>
+          <h1 className="text-4xl font-semibold mb-2">The <a className="underline decoration-rose-700">best ideas </a>come from those who don't need them. </h1>
           <p className="text-xl font-medium">Extract and share the best ideas from <a className="underline decoration-rose-700">2h+ long </a>Youtube podcasts in 1min.</p>
         </div>
-        <Card className="mx-auto my-10 max-w-sm">
+        <Card className="mx-auto my-10 max-w-sm hover:bg-white shadow outline outline-gray-100">
           <CardHeader>
             <CardTitle className="text-2xl">Create a new account</CardTitle>
             <CardDescription>

@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-
+import  { jwtDecode } from 'jwt-decode';
 import {
   Card,
   CardContent,
@@ -7,15 +8,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-
-import { useEffect, useState } from "react"
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import Vote from './Vote';
-import CommentsPreview from './CommentsPreview';
-import useNotes from "../hooks/useNotes"; 
-import  { jwtDecode } from 'jwt-decode';
 import { UrlLink } from '../utils/Formatting';
+import useNotes from "../hooks/useNotes"; 
+import CommentsPreview from './CommentsPreview';
+import Vote from './Vote';
 
 interface Props {
   listSlug: number;
@@ -27,7 +25,6 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
   const { execute, data, error, isLoading } = useNotes(listSlug);
   const token = localStorage.getItem('authTokens');
   const userId = token ? jwtDecode(token).user_id : null;
-  console.log(data);
 
   useEffect(() => {
     execute(); // Trigger fetching the comment list
@@ -45,7 +42,6 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
     if (data.length === 0) return <p>No notes available in this list yet.</p>;
   }
   
-
   return (
     <>
       <div className="col-span-3">
@@ -86,14 +82,4 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
   )
 }
 
-export default NotePreviewList
-
-
-
-
-
-
-
-
-
-
+export default NotePreviewList;

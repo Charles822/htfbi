@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
  
+// this is not a built-in hook from React
 export function useInterval(callback, delay) {
   const savedCallback = useRef();
  

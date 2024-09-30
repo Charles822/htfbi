@@ -19,8 +19,6 @@ const useComments = (
 	method: 'get' | 'post' | 'patch' | 'delete' = 'get', 
 	endpointType?: 'count' | 'list' = 'list', 
 	requestData?: any) => {
-
-	console.log("useComments called with:", { noteId, commentId, userId, method, endpointType });
 	
 	const endpoint = method === 'post'
       ? `/interactions/comments/add_comment/`

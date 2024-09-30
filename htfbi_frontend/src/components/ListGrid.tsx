@@ -1,5 +1,5 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
 import {
   Card,
   CardContent,
@@ -7,23 +7,18 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-
-import { useEffect } from 'react';
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import ListForm from "../Pages/ListForm";
 import useLists from "../hooks/useLists"; 
-import ListForm from "../Pages/ListForm"
-
 
 const ListGrid = () => {
   const { execute, data, error, isLoading } = useLists();
-  console.log(data);
 
   useEffect(() => {
     execute(); // Trigger fetching lists
   }, []); // need to add depency execute in prod server
 
-  console.log(isLoading)
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading lists: {error.message}</p>;
 

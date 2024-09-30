@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button"
-
+import { jwtDecode } from 'jwt-decode';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -8,17 +8,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import  { jwtDecode } from 'jwt-decode';
-import useLists from '../hooks/useLists'
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-
-import { useToast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/toaster"
- 
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
+import useLists from '../hooks/useLists';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const formSchema = z.object({
   name: z.string().min(5, {
@@ -32,9 +29,7 @@ const formSchema = z.object({
   }),
 })
 
-
 type FormData = z.infer<typeof formSchema>;
-
 
 function ListForm() {
   // 1. Define your form.
@@ -53,10 +48,8 @@ function ListForm() {
 
   const { toast } = useToast();
 
-
   // Call useLists at the top level
   const { execute, data, error, isLoading } = useLists(undefined, 'post');
-
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {
@@ -79,9 +72,11 @@ function ListForm() {
     await execute(list_data);
 
     if (error) {
-      console.error('Error creating list:', error);
+    	if (process.env.NODE_ENV === 'development') {
+      	console.error('Error creating list:', error);
+    	}
+    	toast({ variant: "destructive", description: "Your list cannot be created at the moment!" });
     } else {
-      console.log('List created successfully:', data);
       toast({variant: "success", description: "Your list has been created successfully!"});
       reset();
     }

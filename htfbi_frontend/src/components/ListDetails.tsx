@@ -1,6 +1,6 @@
+import { useState, useEffect } from "react"
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet';
-
 import {
   Card,
   CardContent,
@@ -9,8 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-
-import { useState, useEffect } from "react"
 import { Separator } from "@/components/ui/separator"
 import useLists from "../hooks/useLists"
 import NotePreviewList from  "./NotePreviewList"

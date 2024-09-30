@@ -1,5 +1,7 @@
-import { Button } from "@/components/ui/button"
-
+import { useState } from 'react';
+import  { jwtDecode } from 'jwt-decode'
+import { LoaderCircle } from "lucide-react"
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -8,20 +10,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import  { jwtDecode } from 'jwt-decode'
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
+import { useInterval } from "../hooks/useInterval";
 import useNotes from '../hooks/useNotes'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
-
-import { useToast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/toaster"
-import { LoaderCircle } from "lucide-react"
-import { useInterval } from "../hooks/useInterval"
-import { useState } from 'react';
- 
+import { z } from "zod";
 
 const formSchema = z.object({
   youtube_url: z.string().url(),
@@ -34,10 +31,8 @@ interface Props {
   onNoteCreated: () => void;
 }
 
-
 function NoteForm({ listId, onNoteCreated }: Props) {
   const [delay, setDelay] = useState(5000);
-  // const [taskId, setTaskId] = useState<string | null>(null);
   const [taskIds, setTaskIds] = useState([]);
 
   // 1. Define your form.
@@ -62,12 +57,10 @@ function NoteForm({ listId, onNoteCreated }: Props) {
   useInterval(async () => {
   if (taskIds.length > 0) {
     for (const taskId of taskIds) {
-      console.log('Checking taskId:', taskId);
       const response = await fetch(`http://127.0.0.1:8000/notes/notes/check_task_status/${taskId}/`, {
         method: 'GET',
       });
       const data = await response.json();
-      console.log(data);
       if (data.status === 'SUCCESS') {
         toast({ variant: "success", description: "Your note is ready!" });
         // Remove completed task ID from the array
@@ -93,14 +86,15 @@ function NoteForm({ listId, onNoteCreated }: Props) {
     
       // Call the API to create a note
       const response = await execute(note_data);
-      console.log(response)
       setTaskIds(prevTaskIds => [...prevTaskIds, response.taskId])
       
       toast({ variant: "loading", description: "Your note is processing!" });
       reset();
 
     } catch (err) {
-      console.error('Error creating note:', err.message);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error creating note:', err.message);
+      }
       toast({ variant: "destructive", description: err.message });
       reset();
     }
