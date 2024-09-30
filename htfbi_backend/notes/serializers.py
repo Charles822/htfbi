@@ -1,3 +1,5 @@
+from django.db.models import Sum
+from django.contrib.auth.models import User
 from datetime import datetime
 from rest_framework import serializers
 from rest_framework.response import Response
@@ -5,16 +7,13 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from .models import Note
 from ai_agent.models import AgentResponse, AgentRole
-from contents.models import Video, Transcript
-from lists.models import List
-from django.contrib.auth.models import User
-from django.db.models import Sum
-from contents.youtube_data import fetch_video_info, fetch_video_transcript, extract_video_id
 from ai_agent.llama3_agent import get_agent_response
-from contents.serializers import VideoSerializer
 from ai_agent.serializers import AgentResponseSerializer
+from contents.models import Video, Transcript
+from contents.youtube_data import fetch_video_info, fetch_video_transcript, extract_video_id
+from contents.serializers import VideoSerializer
+from lists.models import List
 from users.serializers import UserSerializer
-
 
 class NoteCreationSerializer(serializers.Serializer):
     youtube_url = serializers.URLField(required=True)
@@ -35,20 +34,17 @@ class NoteCreationSerializer(serializers.Serializer):
                 raise ValidationError({"error": "A note for this content already exists in this list."})
 
         # get the youtube video ID
-        
         youtube_video_id = extract_video_id(youtube_url)
 
         # Create or retrieve the video instance
         def get_video_instance(youtube_video_id):
             # check if the video instance already exists
             existing_video_instance = Video.objects.filter(youtube_video_id=youtube_video_id)
-            print('video_instance: ', existing_video_instance)
             if existing_video_instance:
                 return existing_video_instance.get()
 
             # if not, create a new one
             video_data = fetch_video_info(youtube_video_id)
-            print(video_data)
 
             if 'items' not in video_data or not video_data['items']:
                 return Response({"error": "Invalid video ID or no data found"}, status=status.HTTP_404_NOT_FOUND)
@@ -87,7 +83,6 @@ class NoteCreationSerializer(serializers.Serializer):
             return Response({"error": "Video not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
-
         # get or create transcript instance
         def get_transcript_instance(video_instance):
             # Check if the transcript instance exists 
@@ -122,8 +117,6 @@ class NoteCreationSerializer(serializers.Serializer):
         
         # generate response with the agent
         agent_response = get_agent_response(transcript_instance.transcript_text, agent_role.description)
-
-
         agent_response_instance = AgentResponse.objects.create(
             video=video_instance,
             transcript=transcript_instance,

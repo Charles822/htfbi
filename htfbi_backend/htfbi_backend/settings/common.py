@@ -27,9 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,7 +39,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'debug_toolbar',
-    'playground',
     'ai_agent',
     'contents',
     'users',
@@ -83,7 +80,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
-
 
 
 ROOT_URLCONF = 'htfbi_backend.urls'
@@ -168,7 +164,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'INFO',  # Set to 'WARNING' or higher to reduce verbosity
+            'level': 'ERROR', # set to error for production
         },
         'debug_toolbar': {
             'handlers': ['console'],

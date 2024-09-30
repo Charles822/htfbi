@@ -1,9 +1,9 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
+from users.serializers import UserSerializer
 from .models import List
 from ai_agent.models import AgentRole
 from ai_agent.serializers import AgentRoleSerializer
-from django.contrib.auth.models import User
-from users.serializers import UserSerializer
 
 
 class ListCreationSerializer(serializers.Serializer):
