@@ -27,13 +27,14 @@ export interface Note {
 	comments_count: number;
 	votes_count: number;
 	created_at: string;
+	slug: string;
 }
 
-const useNotes = (slug?: number, noteId?: number, method: 'get' | 'post' | 'patch' = 'get', requestData?: { youtube_url: string; note_list: number; owner: number }) => {
+const useNotes = (slug?: number, noteSlug?: number, method: 'get' | 'post' | 'patch' = 'get', requestData?: { youtube_url: string; note_list: number; owner: number }) => {
 	const endpoint = method === 'post'
 	? `/notes/notes/add_note/`
-	: noteId 
-		? `/notes/notes/${noteId}/`
+	: noteSlug 
+		? `/notes/notes/${noteSlug}/`
 		: `/lists/lists/${slug}/notes/`;
 	
 	return useData<Note | Note[]>(endpoint, method, requestData);

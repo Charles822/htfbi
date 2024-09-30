@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet';
 
 import {
   Card,
@@ -38,6 +39,10 @@ const ListDetails = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Noteless | {data.name}</title>
+        <meta name="description" content={data.meta_description} />
+      </Helmet>
       <div className="my-2 grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-4 xl:grid-cols-4 mb-10">
         <div className="col-span-1"></div>
         <div className="grid flex-1 col-span-3" >

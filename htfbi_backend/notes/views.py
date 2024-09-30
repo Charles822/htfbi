@@ -25,6 +25,7 @@ def get_permissions_based_on_action(action):
 class NoteViewSet(ModelViewSet):
     serializer_class = NoteSerializer
     permission_classes = [AllowAny]
+    lookup_field = 'slug'  # Use 'slug' for lookup
 
     # def get_permissions(self):
     #     return [permission() for permission in get_permissions_based_on_action(self.action)]

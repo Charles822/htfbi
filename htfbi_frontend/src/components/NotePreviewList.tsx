@@ -55,7 +55,7 @@ const NotePreviewList = ({ listSlug, isCreated, reset }: Props) => {
           <div key={note.id} className="mb-2">
             <Separator className='gap-0 mb-1'/>
               <Card>
-                <Link to={`/note/${note.id}`}>
+                <Link to={`/note/${note.slug}`}>
                   <CardHeader>
                     <CardTitle className="my-2 text-md">{note.video.title}</CardTitle>
                     <CardDescription className="grid gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between">

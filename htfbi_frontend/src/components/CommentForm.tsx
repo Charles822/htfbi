@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button"
-
 import {
   Form,
   FormControl,
@@ -11,15 +10,13 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/components/ui/use-toast"
 import  { jwtDecode } from 'jwt-decode'
-import useComments from '../hooks/useComments'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
-import { useToast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/toaster"
- 
+import useComments from '../hooks/useComments'
 
 const formSchema = z.object({
   text: z.string().min(2, {
@@ -27,14 +24,12 @@ const formSchema = z.object({
   }),
 })
 
-
 type FormData = z.infer<typeof formSchema>;
 
 interface Props {
 	noteId: number;
 	isSubmitted: (status: boolean) => void;
 }
-
 
 function CommentForm({ noteId, isSubmitted }: Props) {
   // 1. Define your form.
@@ -46,15 +41,11 @@ function CommentForm({ noteId, isSubmitted }: Props) {
   });
 
   const { control, handleSubmit, formState, reset } = form;
-
   const { errors, isSubmitting, isDirty, isValid } = formState;
-
   const { toast } = useToast();
-
 
   // Call useLists at the top level
   const { execute, data, error, isLoading } = useComments(undefined, undefined, undefined, 'post', undefined);
-
 
   // 2. Define a submit handler.
   const onSubmit = async (values: FormData) => {
@@ -73,13 +64,10 @@ function CommentForm({ noteId, isSubmitted }: Props) {
     };
 
     // Call the API request here
-    console.log(comment_data);
     await execute(comment_data);
 
     if (error) {
-      console.error('Error creating a new comment:', error);
     } else {
-      console.log('Comment created successfully:', data);
       toast({variant: "success", description: "Your comment has been created successfully!"});
       reset();
       isSubmitted(true);

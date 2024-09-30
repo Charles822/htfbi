@@ -21,8 +21,8 @@ import { UrlLink, TextWithLineBreaks } from '../utils/Formatting';
 
 
 const NoteDetailsCard = () => {
-  const params = useParams<{noteId: number}>();
-  const { execute, data: note, error, isLoading } = useNotes(undefined, params.noteId);
+  const params = useParams<{noteSlug: number}>();
+  const { execute, data: note, error, isLoading } = useNotes(undefined, params.noteSlug);
   const [isSubmitted, setStatus] = useState(false);
   const token = localStorage.getItem('authTokens');
   const userId = token ? jwtDecode(token).user_id : null;
