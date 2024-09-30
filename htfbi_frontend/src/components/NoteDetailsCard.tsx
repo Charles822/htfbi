@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import {
   Card,
@@ -40,44 +41,50 @@ const NoteDetailsCard = () => {
   if (!note || Array.isArray(note)) return <p>No note available.</p>;
 
   return (
-    <div className="grid flex-1 items-start justify-between gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1">
-      <Card className="hover:bg-white">
-        <CardHeader>
-          <CardTitle className="my-2">{note.video.title}</CardTitle>
-          <CardDescription className="grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between">
-            <ul>
-              <li>Channel: {note.video.channel_name}</li>
-              <li>
-                <UrlLink url={note.video.youtube_url} />
-              </li>
-              <li>Original language: {note.video.original_language}</li>
-              <li>Published date: {note.video.published_at}</li>
-            </ul>
-            <ul>
-              <li>Note created by <a className="text-rose-700"> @{note.owner.username}</a></li>
-              <li>On: {note.created_at}</li>
-            </ul>
-          </CardDescription>
-        </CardHeader>
-        <Separator className="my-2 mx-auto w-2/3"/>
-        <CardContent>
-          <h3 className="my-2 text-rose-700">Agent Response</h3>
-          <TextWithLineBreaks text={note.response.agent_response} />
-        </CardContent>
-        <CardFooter className="flex items-center justify-start gap-4 sm:px-6 sm:py-1.5">
-          <Vote noteId={note.id} userId={userId} ></Vote>
-          <CommentsPreview noteId={note.id} updateAfterDelete={isDeleted} updateAfterPost={isSubmitted} ></CommentsPreview>
-        </CardFooter>
-      </Card>
-      <div className="items-start md:w-1/2" >
-        <CommentForm isSubmitted={status => setStatus(status)} noteId={note.id} />
+    <>
+      <Helmet>
+        <title>Noteless | {note.video.title}</title>
+        <meta name="description" content={note.meta_description} />
+      </Helmet>
+      <div className="grid flex-1 items-start justify-between gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-1 xl:grid-cols-1">
+        <Card className="hover:bg-white">
+          <CardHeader>
+            <CardTitle className="my-2">{note.video.title}</CardTitle>
+            <CardDescription className="grid flex-1 gap-4 lg:grid-cols-2 xl:grid-cols-2 justify-between">
+              <ul>
+                <li>Channel: {note.video.channel_name}</li>
+                <li>
+                  <UrlLink url={note.video.youtube_url} />
+                </li>
+                <li>Original language: {note.video.original_language}</li>
+                <li>Published date: {note.video.published_at}</li>
+              </ul>
+              <ul>
+                <li>Note created by <a className="text-rose-700"> @{note.owner.username}</a></li>
+                <li>On: {note.created_at}</li>
+              </ul>
+            </CardDescription>
+          </CardHeader>
+          <Separator className="my-2 mx-auto w-2/3"/>
+          <CardContent>
+            <h3 className="my-2 text-rose-700">Agent Response</h3>
+            <TextWithLineBreaks text={note.response.agent_response} />
+          </CardContent>
+          <CardFooter className="flex items-center justify-start gap-4 sm:px-6 sm:py-1.5">
+            <Vote noteId={note.id} userId={userId} ></Vote>
+            <CommentsPreview noteId={note.id} updateAfterDelete={isDeleted} updateAfterPost={isSubmitted} ></CommentsPreview>
+          </CardFooter>
+        </Card>
+        <div className="items-start md:w-1/2" >
+          <CommentForm isSubmitted={status => setStatus(status)} noteId={note.id} />
+        </div>
+        <div className="grid flex-1 gap-4 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-3 xl:grid-cols-3" >
+          <div className="grid flex-1 col-span-2" >
+          <CommentsList noteId={note.id} isDeleted={update => setUpdateCount(update)} isSubmitted={isSubmitted} resetSubmission={() => setStatus(false)} resetDeletion={() => setUpdateCount(false)} />
+        </div>
+        </div>
       </div>
-      <div className="grid flex-1 gap-4 sm:px-6 sm:py-0 md:gap-0 lg:grid-cols-3 xl:grid-cols-3" >
-        <div className="grid flex-1 col-span-2" >
-        <CommentsList noteId={note.id} isDeleted={update => setUpdateCount(update)} isSubmitted={isSubmitted} resetSubmission={() => setStatus(false)} resetDeletion={() => setUpdateCount(false)} />
-      </div>
-      </div>
-    </div>
+    </>
   )
 }
 
