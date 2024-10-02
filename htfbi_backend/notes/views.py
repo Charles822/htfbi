@@ -10,13 +10,17 @@ from .models import Note
 from lists.models import List
 from .serializers import NoteSerializer, NoteCreationSerializer
 from htfbi_backend.tasks import create_note_task 
-from core.permissions import AdminOnly
+from core.permissions import AdminOnly, IsListOwnerOrAdmin
 from celery.result import AsyncResult
 
 def get_permissions_based_on_action(action):
     # No permission required for retrieving a resource
-    if action in ['retrieve', 'list']:
+    if action in ['retrieve', 'list', 'check_task_status']:
         return [AllowAny]
+
+    elif action == 'add_note':
+        print('He is owner or admin')
+        return [IsListOwnerOrAdmin]
         
     # For other actions, only allow the owner or an admin
     else:
@@ -27,8 +31,8 @@ class NoteViewSet(ModelViewSet):
     permission_classes = [AllowAny]
     lookup_field = 'slug'  # Use 'slug' for lookup
 
-    # def get_permissions(self):
-    #     return [permission() for permission in get_permissions_based_on_action(self.action)]
+    def get_permissions(self):
+        return [permission() for permission in get_permissions_based_on_action(self.action)]
 
     def get_queryset(self):
         list_slug = self.kwargs.get('list_slug')
@@ -46,7 +50,6 @@ class NoteViewSet(ModelViewSet):
     def add_note(self, request, *args, **kwargs):
         note_data = request.data
         task_result = create_note_task.delay(note_data)
-        print('taskId=', task_result.id)
         
         # Respond immediately that the task is in progress
         return Response({

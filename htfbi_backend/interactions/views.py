@@ -18,7 +18,6 @@ def get_permissions_based_on_action(action):
         return [IsAuthenticated]
     # For other actions, only allow the owner or an admin
     else:
-        print('yes, he is the owner')
         return [IsOwnerOrAdmin]
 
 
