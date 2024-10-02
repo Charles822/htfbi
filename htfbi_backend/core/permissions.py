@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.exceptions import PermissionDenied
 from lists.models import List
 # from django.contrib.auth import get_user_model
 # import jwt
@@ -28,12 +29,13 @@ class IsListOwnerOrAdmin(BasePermission):
         # Fetch the list object (handle this with try-except if necessary)
         list_obj = List.objects.get(id=list_id)
         # print('is he the owner: ', list_obj.owner.id == current_user)
-        print(request.user)
-        print(list_obj.owner)
-        print(list_obj.owner == request.user)
 
         # Check if the user is the owner of the list or an admin
-        return list_obj.owner == request.user or request.user.is_staff
+        if list_obj.owner == request.user or request.user.is_staff:
+            return True
+        else:
+            raise PermissionDenied(detail="You do not have permission to access this list.")
+
 
 
 class AdminOnly(BasePermission):
