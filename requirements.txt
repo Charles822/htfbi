@@ -16,6 +16,7 @@ distro==1.9.0
 dj-database-url==2.2.0
 Django==5.1.1
 django-cors-headers==4.4.0
+django-debug-toolbar==4.4.6
 djangorestframework==3.15.2
 djangorestframework-simplejwt==5.3.1
 drf-nested-routers==0.94.1
