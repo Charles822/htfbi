@@ -1,8 +1,5 @@
 .env
 .DS_Store
 /htfbi_backend/static/
-<<<<<<< HEAD
 htfbi_frontend/
-=======
-htfbi_frontend/
->>>>>>> dev-backend
+
