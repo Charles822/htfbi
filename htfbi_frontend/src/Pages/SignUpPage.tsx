@@ -157,7 +157,7 @@ export default function SignUpPage() {
   };
 
   if (redirect) {
-    return <Navigate to="/login/new" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return (

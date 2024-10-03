@@ -24,7 +24,9 @@ const useData = <T>(endpoint: string, method: 'get' | 'post' | 'patch' | 'delete
         errorMessage = err.response?.data?.error || err.message || errorMessage;
       }
       setError(errorMessage);
-      console.error('Error fetching data:', errorMessage);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching data:', errorMessage);
+      }
       throw new Error(errorMessage); // Throw error to handle in onSubmit
   } finally {
     setLoading(false);
