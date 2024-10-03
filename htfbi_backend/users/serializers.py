@@ -35,6 +35,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = '__all__'
 
+
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=True)
     
