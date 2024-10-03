@@ -93,7 +93,6 @@ def combine_analyzed_chunks(analyzed_chunks):
 
 # Resolution 
 def get_agent_response(transcript, agent_role):
-
     transcript_chunks = transform_into_chunks(transcript)
 
     analyzed_chunks = analyse_chunks(transcript_chunks, agent_role)
